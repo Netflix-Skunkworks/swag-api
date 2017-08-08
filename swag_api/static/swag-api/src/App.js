@@ -3,7 +3,7 @@ import AppBar from 'material-ui/AppBar';
 import fuzzyFilterFactory from './FuzzyFilterFactory';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {Card, CardActions, CardHeader, CardMedia, CardText} from 'material-ui/Card';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import Subheader from 'material-ui/Subheader';
 import Avatar from 'material-ui/Avatar';
