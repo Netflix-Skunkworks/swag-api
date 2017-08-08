@@ -2,6 +2,7 @@
   "name": "swag",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:5000",
   "dependencies": {
     "material-ui": "^0.18.7",
     "react": "^15.6.1",

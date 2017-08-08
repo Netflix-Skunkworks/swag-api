@@ -22,20 +22,6 @@ SWAG_API_BLUEPRINTS = (
 
 def create_app(config=None):
     app = factory.create_app(app_name=__name__, blueprints=SWAG_API_BLUEPRINTS, config=None)
-    configure_hook(app)
     return app
-
-
-def configure_hook(app):
-    """
-    :param app:
-    :return:
-    """
-    from swag_api.decorators import crossdomain
-    if app.config.get('CORS'):
-        @app.after_request
-        @crossdomain(origin=u"http://localhost:3000", methods=['PUT', 'HEAD', 'GET', 'POST', 'OPTIONS', 'DELETE'])
-        def after(response):
-            return response
 
 cli = FlaskGroup(create_app=create_app)

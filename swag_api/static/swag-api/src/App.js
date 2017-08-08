@@ -100,10 +100,6 @@ const prefilters = [
 
 
 class Search extends Component {
-    constructor(props, context) {
-        super(props, context);
-    }
-
     render() {
         return (
             <div style={styles.container}>
@@ -159,10 +155,6 @@ class Error extends Component {
 
 
 class MetadataTable extends Component {
-    constructor(props, context) {
-        super(props, context);
-    }
-
     render() {
         return (
             <div>
@@ -219,6 +211,8 @@ class ServiceDialog extends Component {
             />,
         ];
 
+        let metadata = this.props.data.metadata ? this.props.data.metadata : {};
+
         return (
             <div>
                 <ListItem
@@ -233,7 +227,7 @@ class ServiceDialog extends Component {
                     open={this.state.open}
                     onRequestClose={this.handleClose}
                 >
-                <MetadataTable data={this.props.data.metadata}/>
+                <MetadataTable data={metadata}/>
                 </Dialog>
             </div>
         );
@@ -407,7 +401,7 @@ export default class Main extends Component {
     }
 
     componentDidMount() {
-        let myRequest = new Request('http://localhost:5000/api/1/accounts');
+        let myRequest = new Request('/api/1/accounts');
         fetch(myRequest).then((response) => {
             this.setState({loading: false});
             if (response.ok) {
