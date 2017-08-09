@@ -28,7 +28,7 @@ setup(
     install_requires=[
         'flask==0.12.2',
         'raven[flask]==6.1.0',
-        'swag_client',
+        'swag_client==0.2.0dev3',
         'Flask-RESTful==0.3.6',
         'gunicorn==19.7.1'
     ],
@@ -37,9 +37,6 @@ setup(
     ],
     tests_require=[
         'pytest',
-    ],
-    dependency_links=[
-        'https://github.com/kevgliss/swag-client.git@v2-schema#egg=swag_client'
     ],
     entry_points={
         'console_scripts': [
