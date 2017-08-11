@@ -1,15 +1,19 @@
 import React, {Component} from 'react';
 import AppBar from 'material-ui/AppBar';
 import fuzzyFilterFactory from './FuzzyFilterFactory';
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import {Card, CardActions, CardHeader, CardMedia, CardText} from 'material-ui/Card';
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import Subheader from 'material-ui/Subheader';
 import Avatar from 'material-ui/Avatar';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
 import {List, ListItem} from 'material-ui/List';
+import Snackbar from 'material-ui/Snackbar';
+
 import CircularProgress from 'material-ui/CircularProgress';
 
 import ActionGrade from 'material-ui/svg-icons/action/grade';
@@ -20,6 +24,7 @@ import BeachAccess from 'material-ui/svg-icons/places/beach-access';
 import Warning from 'material-ui/svg-icons/alert/warning';
 import Email from 'material-ui/svg-icons/communication/email';
 import Contacts from 'material-ui/svg-icons/communication/contacts';
+import ContentCopy from 'material-ui/svg-icons/content/content-copy';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
@@ -28,7 +33,9 @@ import {
     red500,
     yellow500,
     green500,
-    gray500,
+    lightBlue500,
+    brown500,
+    blueGrey500,
     white
 } from 'material-ui/styles/colors';
 
@@ -80,10 +87,11 @@ const styles = {
 };
 
 const fuseConfig = {
-        keys: ['environment', 'id', 'sensitive', 'owner', 'provider', 'tags'],
-        threshold: 0.2,
-        distance: 100
-    };
+    keys: ['environment', 'id', 'sensitive', 'owner', 'provider', 'tags', 'aliases', 'contacts'],
+    threshold: 0.6,
+    distance: 100,
+    shouldSort: true
+};
 
 const prefilters = [
     {
@@ -112,16 +120,60 @@ class Search extends Component {
                     {filteredItems => {
                         return (
                             <div>
-                                {filteredItems.map((item) => <AccountCard key={item.id} data={item}/>) }
+                                {filteredItems.map((item) => <AccountCard key={item.id} data={item}/>)}
                             </div>
                         )
                     }}
                 </FilterResults>
-                {this.props.loading ? <div style={styles.loadingProgress}><CircularProgress size={80} thickness={5} /></div> : null }
+                {this.props.loading ?
+                    <div style={styles.loadingProgress}><CircularProgress size={80} thickness={5}/></div> : null}
             </div>
         );
     }
 }
+
+class CopyToClipboardButton extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: false,
+            value: '',
+            copied: false
+        };
+    }
+
+    handleTouchTap = () => {
+        this.setState({
+            open: true,
+        });
+    };
+
+    handleRequestClose = () => {
+        this.setState({
+            open: false,
+        });
+    };
+
+    render() {
+        return (
+            <div>
+                <CopyToClipboard text={this.props.text}
+                                 onCopy={() => this.setState({copied: true, open: true})}>
+                    <IconButton tooltip={this.props.tooltip}>
+                        <ContentCopy/>
+                    </IconButton>
+                </CopyToClipboard>
+                <Snackbar
+                    open={this.state.open}
+                    message="Copied to clipboard"
+                    autoHideDuration={4000}
+                    onRequestClose={this.handleRequestClose}
+                />
+            </div>
+        );
+    }
+}
+
 
 class Error extends Component {
     constructor(props, context) {
@@ -140,8 +192,6 @@ class Error extends Component {
                     title="Error"
                     subtitle="Something has gone terribly wrong"
                 />
-                <CardMedia>
-                </CardMedia>
                 <CardText>
                     SWAG isn't acting like itself at the moment, would you like to retry?
                 </CardText>
@@ -191,7 +241,6 @@ class ServiceDialog extends Component {
         this.state = {
             open: false,
         };
-
     }
 
     handleOpen = () => {
@@ -218,7 +267,7 @@ class ServiceDialog extends Component {
                 <ListItem
                     onTouchTap={this.handleOpen}
                     primaryText={this.props.data.name}
-                    leftIcon={<ActionGrade />}
+                    leftIcon={<ActionGrade color={blue300}/>}
                 />
                 <Dialog
                     title="Details"
@@ -227,10 +276,40 @@ class ServiceDialog extends Component {
                     open={this.state.open}
                     onRequestClose={this.handleClose}
                 >
-                <MetadataTable data={metadata}/>
+                    <MetadataTable data={metadata}/>
                 </Dialog>
             </div>
         );
+    }
+}
+
+class StatusAvatar extends Component {
+    avatarColor(status) {
+        if (status === "created") {
+            return lightBlue500
+        } else if (status === "in-progress") {
+            return yellow500
+        } else if (status === "ready") {
+            return green500
+        } else if (status === "deprecated") {
+            return brown500
+        } else if (status === "deleted") {
+            return red500
+        } else if (status === "in-active") {
+            return blueGrey500
+        } else {
+            return lightBlue500
+        }
+    }
+
+    render() {
+        return (
+            <Avatar
+                color={white}
+                backgroundColor={this.avatarColor(this.status)}
+                style={{marginRight: '10px'}}
+            />
+        )
     }
 }
 
@@ -246,7 +325,7 @@ class AccountCard extends Component {
         this.handleReduce = this.handleReduce.bind(this);
 
         this.state = {
-            expanded: false,
+            expanded: false
         };
     }
 
@@ -266,18 +345,6 @@ class AccountCard extends Component {
         this.setState({expanded: false});
     };
 
-    avatarColor(status) {
-        if (status === "not ready") {
-            return red500
-        } else if (status === "in progress") {
-            return yellow500
-        } else if (status === "ready") {
-            return green500
-        } else {
-            return gray500
-        }
-    }
-
     render() {
         return (
             <div>
@@ -285,12 +352,7 @@ class AccountCard extends Component {
                     <CardHeader
                         title={this.account.name}
                         subtitle={this.account.description}
-                        avatar={
-                            <Avatar
-                                color={white}
-                                backgroundColor={this.avatarColor(this.status)}
-                            />
-                        }
+                        avatar={<StatusAvatar/>}
                         actAsExpander={true}
                         showExpandableButton={true}
                     />
@@ -301,43 +363,43 @@ class AccountCard extends Component {
                                 <ListItem
                                     primaryText={this.account.id}
                                     secondaryText="Account Id"
-                                    leftIcon={<Fingerprint />}
+                                    leftIcon={<Fingerprint/>}
                                     disabled={true}
                                 />
                                 <ListItem
                                     primaryText={this.account.provider}
                                     secondaryText="Account Provider"
-                                    leftIcon={<Computer />}
+                                    leftIcon={<Computer/>}
                                     disabled={true}
                                 />
                                 <ListItem
                                     primaryText={this.account.owner}
                                     secondaryText="Account Owner"
-                                    leftIcon={<PermIdentity />}
+                                    leftIcon={<PermIdentity/>}
                                     disabled={true}
                                 />
                                 <ListItem
                                     primaryText={this.account.environment}
                                     secondaryText="Environment"
-                                    leftIcon={<BeachAccess />}
+                                    leftIcon={<BeachAccess/>}
                                     disabled={true}
                                 />
                                 <ListItem
-                                    primaryText={this.account.sensitive ? 'Yes': 'No'}
+                                    primaryText={this.account.sensitive ? 'Yes' : 'No'}
                                     secondaryText="Sensitive"
-                                    leftIcon={<Warning />}
+                                    leftIcon={<Warning/>}
                                     disabled={true}
                                 />
                                 <ListItem
                                     primaryText={this.account.email}
                                     secondaryText="Email"
-                                    leftIcon={<Email />}
+                                    leftIcon={<Email/>}
                                     disabled={true}
                                 />
                                 <ListItem
                                     primaryText={this.account.contacts}
                                     secondaryText="Contacts"
-                                    leftIcon={<Contacts />}
+                                    leftIcon={<Contacts/>}
                                     disabled={true}
 
                                 />
@@ -346,7 +408,7 @@ class AccountCard extends Component {
                                 <Subheader>Services</Subheader>
                                 {this.account.services.map((service, index) => {
                                     return (
-                                        <ServiceDialog key={index} data={service} />
+                                        <ServiceDialog key={index} data={service}/>
                                     )
                                 })}
                             </List>
@@ -367,6 +429,9 @@ class AccountCard extends Component {
                             </List>
                         </div>
                     </CardText>
+                    <CardActions>
+                        <CopyToClipboardButton tooltip="Copy AccountId" text={this.account.id}/>
+                    </CardActions>
                 </Card>
             </div>
         );
@@ -424,7 +489,7 @@ export default class Main extends Component {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div>
-                    <SWAGAppBar />
+                    <SWAGAppBar/>
                     {this.state.error ? <Error/> : <Search data={this.state.accounts} loading={this.state.loading}/>}
                 </div>
             </MuiThemeProvider>
