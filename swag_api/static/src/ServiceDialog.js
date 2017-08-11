@@ -3,11 +3,23 @@ import {ListItem} from 'material-ui/List';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
+import Chip from 'material-ui/Chip';
+import Subheader from 'material-ui/Subheader';
 import {
     blue300,
 } from 'material-ui/styles/colors';
 
 import MetadataTable from './MetadataTable';
+
+const styles = {
+  chip: {
+    margin: 4,
+  },
+  wrapper: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+};
 
 
 class ServiceDialog extends Component {
@@ -39,6 +51,7 @@ class ServiceDialog extends Component {
         ];
 
         let metadata = this.props.data.metadata ? this.props.data.metadata : {};
+        let title = this.props.data.name + " Service Details";
 
         return (
             <div>
@@ -48,12 +61,28 @@ class ServiceDialog extends Component {
                     leftIcon={<ActionGrade color={blue300}/>}
                 />
                 <Dialog
-                    title="Details"
+                    title={title}
                     actions={actions}
                     modal={false}
                     open={this.state.open}
                     onRequestClose={this.handleClose}
                 >
+                    <Subheader>Regions</Subheader>
+                    <div style={styles.wrapper}>
+                        <Chip
+                            style={styles.chip}
+                        >
+                            a chip
+                        </Chip>
+                    </div>
+                    <Subheader>Groups</Subheader>
+                    <div style={styles.wrapper}>
+                        <Chip
+                            style={styles.chip}
+                        >
+                            a groups
+                        </Chip>
+                    </div>
                     <MetadataTable data={metadata}/>
                 </Dialog>
             </div>

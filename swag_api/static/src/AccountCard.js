@@ -12,12 +12,13 @@ import BeachAccess from 'material-ui/svg-icons/places/beach-access';
 import Warning from 'material-ui/svg-icons/alert/warning';
 import Email from 'material-ui/svg-icons/communication/email';
 import Contacts from 'material-ui/svg-icons/communication/contacts';
+import Layers from 'material-ui/svg-icons/maps/layers';
 
 import {
     red500,
     yellow500,
     green500,
-    lightBlue500,
+    blue300,
     brown500,
     blueGrey500,
     white
@@ -25,12 +26,14 @@ import {
 
 import CopyToClipboardButton from './CopyToClipboardButton';
 import ServiceDialog from './ServiceDialog';
+import AccountStatusStepper from './Status';
 
 
 const styles = {
     dualList: {
         display: 'flex',
-        justifyContent: 'space-evenly'
+        justifyContent: 'flex-start',
+        flexWrap: 'wrap'
     },
     listItem: {
         flexGroup: 0
@@ -39,20 +42,21 @@ const styles = {
 
 class StatusAvatar extends Component {
     avatarColor(status) {
-        if (status === "created") {
-            return lightBlue500;
-        } else if (status === "in-progress") {
-            return yellow500;
-        } else if (status === "ready") {
-            return green500;
-        } else if (status === "deprecated") {
-            return brown500;
-        } else if (status === "deleted") {
-            return red500;
-        } else if (status === "in-active") {
-            return blueGrey500;
-        } else {
-            return lightBlue500;
+        switch (status) {
+            case 'created':
+                return blue300;
+            case 'in-progress':
+                return yellow500;
+            case 'ready':
+                return green500;
+            case 'deprecated':
+                return brown500;
+            case 'deleted':
+                return red500;
+            case 'in-active':
+                return blueGrey500;
+            default:
+                return blue300;
         }
     }
 
@@ -70,8 +74,6 @@ class StatusAvatar extends Component {
 class AccountCard extends Component {
     constructor(props, context) {
         super(props, context);
-
-        this.account = props.data;
 
         this.handleExpandChange = this.handleExpandChange.bind(this);
         this.handleToggle = this.handleToggle.bind(this);
@@ -104,8 +106,8 @@ class AccountCard extends Component {
             <div>
                 <Card expanded={this.state.expanded} onExpandChange={this.handleExpandChange}>
                     <CardHeader
-                        title={this.account.name}
-                        subtitle={this.account.description}
+                        title={this.props.account.name}
+                        subtitle={this.props.account.description}
                         avatar={<StatusAvatar/>}
                         actAsExpander={true}
                         showExpandableButton={true}
@@ -115,60 +117,63 @@ class AccountCard extends Component {
                             <List style={styles.listItem}>
                                 <Subheader>General</Subheader>
                                 <ListItem
-                                    primaryText={this.account.id}
+                                    primaryText={this.props.account.id}
                                     secondaryText="Account Id"
                                     leftIcon={<Fingerprint/>}
                                     disabled={true}
                                 />
                                 <ListItem
-                                    primaryText={this.account.provider}
+                                    primaryText={this.props.account.provider}
                                     secondaryText="Account Provider"
                                     leftIcon={<Computer/>}
                                     disabled={true}
                                 />
                                 <ListItem
-                                    primaryText={this.account.owner}
+                                    primaryText={this.props.account.owner}
                                     secondaryText="Account Owner"
                                     leftIcon={<PermIdentity/>}
                                     disabled={true}
                                 />
                                 <ListItem
-                                    primaryText={this.account.environment}
+                                    primaryText={this.props.account.environment}
                                     secondaryText="Environment"
                                     leftIcon={<BeachAccess/>}
                                     disabled={true}
                                 />
                                 <ListItem
-                                    primaryText={this.account.sensitive ? 'Yes' : 'No'}
+                                    primaryText={this.props.account.sensitive ? 'Yes' : 'No'}
                                     secondaryText="Sensitive"
                                     leftIcon={<Warning/>}
                                     disabled={true}
                                 />
                                 <ListItem
-                                    primaryText={this.account.email}
+                                    primaryText={this.props.account.email}
                                     secondaryText="Email"
                                     leftIcon={<Email/>}
                                     disabled={true}
                                 />
                                 <ListItem
-                                    primaryText={this.account.contacts}
+                                    primaryText={this.props.account.contacts}
                                     secondaryText="Contacts"
                                     leftIcon={<Contacts/>}
                                     disabled={true}
 
                                 />
+                                <ListItem
+                                    primaryText={this.props.account.type}
+                                    secondaryText="Type"
+                                    leftIcon={<Layers/>}
+                                    disabled={true}
+
+                                />
                             </List>
                             <List style={styles.listItem}>
-                                <Subheader>Services</Subheader>
-                                {this.account.services.map((service, index) => {
-                                    return (
-                                        <ServiceDialog key={index} data={service}/>
-                                    )
-                                })}
+                                <Subheader>Status</Subheader>
+                                <AccountStatusStepper status='created'/>
                             </List>
                             <List style={styles.listItem}>
                                 <Subheader>Aliases</Subheader>
-                                {this.account.aliases.map((alias, index) => {
+                                {this.props.account.aliases.map((alias, index) => {
                                     return (
                                         <ListItem
                                             key={index}
@@ -179,12 +184,17 @@ class AccountCard extends Component {
                                 })}
                             </List>
                             <List style={styles.listItem}>
-                                <Subheader>Status</Subheader>
+                                <Subheader>Services</Subheader>
+                                {this.props.account.services.map((service, index) => {
+                                    return (
+                                        <ServiceDialog key={index} data={service}/>
+                                    )
+                                })}
                             </List>
                         </div>
                     </CardText>
                     <CardActions>
-                        <CopyToClipboardButton tooltip="Copy AccountId" text={this.account.id}/>
+                        <CopyToClipboardButton tooltip="Copy Account Id" text={this.props.account.id}/>
                     </CardActions>
                 </Card>
             </div>

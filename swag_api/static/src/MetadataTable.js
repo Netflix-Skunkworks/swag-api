@@ -7,9 +7,10 @@ class MetadataTable extends Component {
     render() {
         return (
             <div>
-                <Subheader>Metadata</Subheader>
+                <Subheader>Service Metadata</Subheader>
                 <Table>
                     <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+
                         <TableRow>
                             <TableHeaderColumn>Key</TableHeaderColumn>
                             <TableHeaderColumn>Value</TableHeaderColumn>

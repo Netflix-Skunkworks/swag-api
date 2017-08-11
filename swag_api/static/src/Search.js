@@ -63,7 +63,7 @@ class Search extends Component {
                     {filteredItems => {
                         return (
                             <div>
-                                {filteredItems.map((item) => <AccountCard key={item.id} data={item}/>)}
+                                {filteredItems.map((item) => <AccountCard key={item.id} account={item}/>)}
                             </div>
                         )
                     }}
