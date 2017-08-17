@@ -4,6 +4,7 @@ import Avatar from 'material-ui/Avatar';
 import {List, ListItem} from 'material-ui/List';
 import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
 import Subheader from 'material-ui/Subheader';
+import Paper from 'material-ui/Paper';
 
 import PermIdentity from 'material-ui/svg-icons/action/perm-identity';
 import Fingerprint from 'material-ui/svg-icons/action/fingerprint';
@@ -18,33 +19,24 @@ import {
     red500,
     yellow500,
     green500,
-    blue300,
     brown500,
     blueGrey500,
+    cyan500,
     white
 } from 'material-ui/styles/colors';
 
 import CopyToClipboardButton from './CopyToClipboardButton';
-import ServiceDialog from './ServiceDialog';
+import ServiceDrawer from './ServiceDrawer';
+import JSONView from './JSONVIew';
+
 import AccountStatusStepper from './Status';
 
-
-const styles = {
-    dualList: {
-        display: 'flex',
-        justifyContent: 'flex-start',
-        flexWrap: 'wrap'
-    },
-    listItem: {
-        flexGroup: 0
-    }
-};
 
 class StatusAvatar extends Component {
     avatarColor(status) {
         switch (status) {
             case 'created':
-                return blue300;
+                return cyan500;
             case 'in-progress':
                 return yellow500;
             case 'ready':
@@ -56,7 +48,7 @@ class StatusAvatar extends Component {
             case 'in-active':
                 return blueGrey500;
             default:
-                return blue300;
+                return cyan500;
         }
     }
 
@@ -104,99 +96,97 @@ class AccountCard extends Component {
     render() {
         return (
             <div>
-                <Card expanded={this.state.expanded} onExpandChange={this.handleExpandChange}>
-                    <CardHeader
-                        title={this.props.account.name}
-                        subtitle={this.props.account.description}
-                        avatar={<StatusAvatar/>}
-                        actAsExpander={true}
-                        showExpandableButton={true}
-                    />
-                    <CardText expandable={true}>
-                        <div style={styles.dualList}>
-                            <List style={styles.listItem}>
-                                <Subheader>General</Subheader>
-                                <ListItem
-                                    primaryText={this.props.account.id}
-                                    secondaryText="Account Id"
-                                    leftIcon={<Fingerprint/>}
-                                    disabled={true}
-                                />
-                                <ListItem
-                                    primaryText={this.props.account.provider}
-                                    secondaryText="Account Provider"
-                                    leftIcon={<Computer/>}
-                                    disabled={true}
-                                />
-                                <ListItem
-                                    primaryText={this.props.account.owner}
-                                    secondaryText="Account Owner"
-                                    leftIcon={<PermIdentity/>}
-                                    disabled={true}
-                                />
-                                <ListItem
-                                    primaryText={this.props.account.environment}
-                                    secondaryText="Environment"
-                                    leftIcon={<BeachAccess/>}
-                                    disabled={true}
-                                />
-                                <ListItem
-                                    primaryText={this.props.account.sensitive ? 'Yes' : 'No'}
-                                    secondaryText="Sensitive"
-                                    leftIcon={<Warning/>}
-                                    disabled={true}
-                                />
-                                <ListItem
-                                    primaryText={this.props.account.email}
-                                    secondaryText="Email"
-                                    leftIcon={<Email/>}
-                                    disabled={true}
-                                />
-                                <ListItem
-                                    primaryText={this.props.account.contacts}
-                                    secondaryText="Contacts"
-                                    leftIcon={<Contacts/>}
-                                    disabled={true}
+                <Paper zDepth={1} style={{margin: 10}}>
+                    <Card expanded={this.state.expanded} onExpandChange={this.handleExpandChange}>
+                        <CardHeader
+                            title={this.props.account.name}
+                            subtitle={this.props.account.description}
+                            avatar={<StatusAvatar/>}
+                            actAsExpander={true}
+                            showExpandableButton={true}
+                        />
+                        <CardText expandable={true}>
+                            <div style={{display: 'flex', flexDirection: 'row', flexFlow: 'row wrap'}}>
+                                <List>
+                                    <Subheader>General</Subheader>
+                                    <ListItem
+                                        primaryText={this.props.account.id}
+                                        secondaryText="Account Id"
+                                        leftIcon={<Fingerprint/>}
+                                        disabled={true}
+                                    />
+                                    <ListItem
+                                        primaryText={this.props.account.provider}
+                                        secondaryText="Account Provider"
+                                        leftIcon={<Computer/>}
+                                        disabled={true}
+                                    />
+                                    <ListItem
+                                        primaryText={this.props.account.owner}
+                                        secondaryText="Account Owner"
+                                        leftIcon={<PermIdentity/>}
+                                        disabled={true}
+                                    />
+                                    <ListItem
+                                        primaryText={this.props.account.environment}
+                                        secondaryText="Environment"
+                                        leftIcon={<BeachAccess/>}
+                                        disabled={true}
+                                    />
+                                    <ListItem
+                                        primaryText={this.props.account.sensitive ? 'Yes' : 'No'}
+                                        secondaryText="Sensitive"
+                                        leftIcon={<Warning/>}
+                                        disabled={true}
+                                    />
+                                    <ListItem
+                                        primaryText={this.props.account.email}
+                                        secondaryText="Email"
+                                        leftIcon={<Email/>}
+                                        disabled={true}
+                                    />
+                                    <ListItem
+                                        primaryText={this.props.account.contacts}
+                                        secondaryText="Contacts"
+                                        leftIcon={<Contacts/>}
+                                        disabled={true}
 
-                                />
-                                <ListItem
-                                    primaryText={this.props.account.type}
-                                    secondaryText="Type"
-                                    leftIcon={<Layers/>}
-                                    disabled={true}
+                                    />
+                                    <ListItem
+                                        primaryText={this.props.account.type ? this.props.account.type : 'Unknown'}
+                                        secondaryText="Type"
+                                        leftIcon={<Layers/>}
+                                        disabled={true}
 
-                                />
-                            </List>
-                            <List style={styles.listItem}>
-                                <Subheader>Status</Subheader>
-                                <AccountStatusStepper status='created'/>
-                            </List>
-                            <List style={styles.listItem}>
-                                <Subheader>Aliases</Subheader>
-                                {this.props.account.aliases.map((alias, index) => {
-                                    return (
-                                        <ListItem
-                                            key={index}
-                                            primaryText={alias}
-                                            disabled={true}
-                                        />
-                                    )
-                                })}
-                            </List>
-                            <List style={styles.listItem}>
-                                <Subheader>Services</Subheader>
-                                {this.props.account.services.map((service, index) => {
-                                    return (
-                                        <ServiceDialog key={index} data={service}/>
-                                    )
-                                })}
-                            </List>
-                        </div>
-                    </CardText>
-                    <CardActions>
-                        <CopyToClipboardButton tooltip="Copy Account Id" text={this.props.account.id}/>
-                    </CardActions>
-                </Card>
+                                    />
+                                </List>
+                                <div>
+                                    <Subheader>Status</Subheader>
+                                    <AccountStatusStepper status='created'/>
+                                </div>
+                                <List>
+                                    <Subheader>Aliases</Subheader>
+                                    {this.props.account.aliases.map((alias, index) => {
+                                        return (
+                                            <ListItem
+                                                key={index}
+                                                primaryText={alias}
+                                                disabled={true}
+                                            />
+                                        )
+                                    })}
+                                </List>
+                            </div>
+                        </CardText>
+                        <CardActions>
+                            <div style={{display: 'flex', flexDirection: 'row', flexFlow: 'row wrap'}}>
+                                <CopyToClipboardButton tooltip="Copy Account Id" text={this.props.account.id}/>
+                                <ServiceDrawer services={this.props.account.services}/>
+                                <JSONView data={this.props.account} />
+                            </div>
+                        </CardActions>
+                    </Card>
+                </Paper>
             </div>
         );
     }

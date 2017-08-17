@@ -22,7 +22,7 @@ class MetadataTable extends Component {
                     <TableBody displayRowCheckbox={false}>
                         {Object.entries(this.props.data).map(([key, value]) => {
                             return (
-                                <TableRow>
+                                <TableRow key={key}>
                                     <TableRowColumn>{key}</TableRowColumn>
                                     <TableRowColumn>{value}</TableRowColumn>
                                     <TableRowColumn>

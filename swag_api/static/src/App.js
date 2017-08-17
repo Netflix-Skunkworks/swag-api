@@ -1,9 +1,13 @@
 import React, {Component} from 'react';
 import AppBar from 'material-ui/AppBar';
+import {Tabs, Tab} from 'material-ui/Tabs';
+
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
+
+import AccountBox from 'material-ui/svg-icons/action/account-box';
 
 import Search from './Search';
 import Error from './Error';
@@ -24,11 +28,6 @@ const muiTheme = getMuiTheme({
     },
 });
 
-const SWAGAppBar = () => (
-    <AppBar
-        title="SWAG"
-    />
-);
 
 export default class Main extends Component {
     constructor(props, context) {
@@ -75,8 +74,13 @@ export default class Main extends Component {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div>
-                    <SWAGAppBar/>
-                    {this.state.error ? <Error/> : <Search data={this.state.accounts} loading={this.state.loading}/>}
+                    <Tabs>
+                        <Tab
+                            icon={<AccountBox/>}
+                            label="Accounts">
+                            {this.state.error ? <Error/> : <Search data={this.state.accounts} loading={this.state.loading}/>}
+                        </Tab>
+                    </Tabs>
                 </div>
             </MuiThemeProvider>
         );

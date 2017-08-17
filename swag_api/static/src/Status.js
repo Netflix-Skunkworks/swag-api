@@ -17,7 +17,7 @@ class AccountStatusStepper extends Component {
     }
 
     getIndex(status) {
-         switch (status) {
+        switch (status) {
             case 'created':
                 return 0;
             case 'in-progress':
@@ -37,68 +37,54 @@ class AccountStatusStepper extends Component {
 
     render() {
         return (
-            <div style={{maxHeight: 400, maxWidth: 380, margin: 'auto'}}>
+            <div>
                 <Stepper linear={false} orientation="vertical" activeStep={this.state.stepIndex}>
                     <Step>
-                        <StepLabel>
-                            Created
-                        </StepLabel>
+                        <StepLabel>Created</StepLabel>
                         <StepContent>
-                            <p style={{wordWrap: "break-word"}}>
-                                Account has been created but infrastructure
-                                has not yet been established.
+                            <p>
+                                Account has been created but infrastructure has not yet been established.
                             </p>
                         </StepContent>
                     </Step>
                     <Step>
-                        <StepLabel>
-                            In-progress
-                        </StepLabel>
+                        <StepLabel>In-progress</StepLabel>
                         <StepContent>
                             <p>
                                 Account infrastructure is currently being deployed.
                             </p>
                         </StepContent>
                     </Step>
-                    <Step completed={false}>
-                        <StepLabel>
-                            Ready
-                        </StepLabel>
+                    <Step>
+                        <StepLabel>Ready</StepLabel>
                         <StepContent>
                             <p>
                                 Account is ready for deployment.
                             </p>
                         </StepContent>
                     </Step>
-                     <Step completed={false}>
-                        <StepLabel>
-                            Deprecated
-                        </StepLabel>
+                    <Step>
+                        <StepLabel>Deprecated</StepLabel>
                         <StepContent>
                             <p>
-                                Account has been marked as deprecated,
-                                no new services should be deployed into this account.
+                                Account has been marked as deprecated, no new services should be deployed into this
+                                account.
                             </p>
                         </StepContent>
                     </Step>
-                    <Step completed={false}>
-                        <StepLabel>
-                            In-active
-                        </StepLabel>
+                    <Step>
+                        <StepLabel>In-active</StepLabel>
                         <StepContent>
                             <p>
                                 Account has been evacuated of all services.
                             </p>
                         </StepContent>
                     </Step>
-                    <Step completed={false}>
-                        <StepLabel>
-                            Deleted
-                        </StepLabel>
+                    <Step>
+                        <StepLabel>Deleted</StepLabel>
                         <StepContent>
                             <p>
-                                Account has been marked as deleted.
-                                No services still exist in this account.
+                                Account has been marked as deleted. No services still exist in this account.
                             </p>
                         </StepContent>
                     </Step>

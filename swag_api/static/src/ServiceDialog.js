@@ -2,23 +2,24 @@ import React, {Component} from 'react';
 import {ListItem} from 'material-ui/List';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import ActionGrade from 'material-ui/svg-icons/action/grade';
+import CheckCircle from 'material-ui/svg-icons/action/check-circle';
 import Chip from 'material-ui/Chip';
 import Subheader from 'material-ui/Subheader';
+import Paper from 'material-ui/Paper';
 import {
-    blue300,
+    cyan500,
 } from 'material-ui/styles/colors';
 
 import MetadataTable from './MetadataTable';
 
 const styles = {
-  chip: {
-    margin: 4,
-  },
-  wrapper: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
+    chip: {
+        margin: 4,
+    },
+    wrapper: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
 };
 
 
@@ -55,11 +56,13 @@ class ServiceDialog extends Component {
 
         return (
             <div>
-                <ListItem
-                    onTouchTap={this.handleOpen}
-                    primaryText={this.props.data.name}
-                    leftIcon={<ActionGrade color={blue300}/>}
-                />
+                <Paper zDepth={1} style={{margin: 10}}>
+                    <ListItem
+                        onTouchTap={this.handleOpen}
+                        primaryText={this.props.data.name}
+                        leftIcon={<CheckCircle color={cyan500}/>}
+                    />
+                </Paper>
                 <Dialog
                     title={title}
                     actions={actions}

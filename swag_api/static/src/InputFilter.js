@@ -63,13 +63,13 @@ export default function inputFilterFactory(store) {
 
         render() {
             return (
-                <div style={{position: 'relative', display: 'flex', justifyContent: 'flex-end', flexDirection: 'row'}}>
+                <div style={{position: 'relative', display: 'flex', justifyContent: 'flex-end', flexDirection: 'row', margin: 10}}>
                     <SearchIcon style={{position: 'absolute', right: 0, top: 15, width: 20, height: 20}}/>
                     <TextField
                         onChange={this.handleChange}
                         value={this.state.value}
                         hintText="Name, environment, etc,."
-                        style={{width: '400px'}}
+                        style={{width: '100%'}}
                     />
                 </div>
             );
