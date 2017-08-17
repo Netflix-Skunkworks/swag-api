@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import AppBar from 'material-ui/AppBar';
 import {Tabs, Tab} from 'material-ui/Tabs';
 
 
