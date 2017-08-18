@@ -1,195 +1,232 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
+import {withStyles} from 'material-ui/styles';
+import classnames from 'classnames';
+import Card, {CardHeader, CardContent, CardActions} from 'material-ui/Card';
+import Collapse from 'material-ui/transitions/Collapse';
 import Avatar from 'material-ui/Avatar';
-import {List, ListItem} from 'material-ui/List';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import Subheader from 'material-ui/Subheader';
-import Paper from 'material-ui/Paper';
+import IconButton from 'material-ui/IconButton';
+import red from 'material-ui/colors/red';
+import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 
-import PermIdentity from 'material-ui/svg-icons/action/perm-identity';
-import Fingerprint from 'material-ui/svg-icons/action/fingerprint';
-import Computer from 'material-ui/svg-icons/hardware/computer';
-import BeachAccess from 'material-ui/svg-icons/places/beach-access';
-import Warning from 'material-ui/svg-icons/alert/warning';
-import Email from 'material-ui/svg-icons/communication/email';
-import Contacts from 'material-ui/svg-icons/communication/contacts';
-import Layers from 'material-ui/svg-icons/maps/layers';
+import List, {ListItem, ListItemText} from 'material-ui/List';
+import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Table';
 
-import {
-    red500,
-    yellow500,
-    green500,
-    brown500,
-    blueGrey500,
-    cyan500,
-    white
-} from 'material-ui/styles/colors';
+import PermIdentity from 'material-ui-icons/PermIdentity';
+import Fingerprint from 'material-ui-icons/Fingerprint';
+import Computer from 'material-ui-icons/Computer';
+import BeachAccess from 'material-ui-icons/BeachAccess';
+import Warning from 'material-ui-icons/Warning';
+import Email from 'material-ui-icons/Email';
+import Contacts from 'material-ui-icons/Contacts';
+import Layers from 'material-ui-icons/Layers';
+import SupervisorAccount from 'material-ui-icons/SupervisorAccount';
 
 import CopyToClipboardButton from './CopyToClipboardButton';
-import ServiceDrawer from './ServiceDrawer';
-import JSONView from './JSONVIew';
+import ServiceDialog from './ServiceDialog';
+import JSONDialog from './JSONDialog';
+import Tabs, {Tab} from 'material-ui/Tabs';
 
-import AccountStatusStepper from './Status';
 
-
-class StatusAvatar extends Component {
-    avatarColor(status) {
-        switch (status) {
-            case 'created':
-                return cyan500;
-            case 'in-progress':
-                return yellow500;
-            case 'ready':
-                return green500;
-            case 'deprecated':
-                return brown500;
-            case 'deleted':
-                return red500;
-            case 'in-active':
-                return blueGrey500;
-            default:
-                return cyan500;
-        }
-    }
-
-    render() {
-        return (
-            <Avatar
-                color={white}
-                backgroundColor={this.avatarColor(this.status)}
-                style={{marginRight: '10px'}}
-            />
-        )
-    }
+function TabContainer(props) {
+    return (
+        <div style={{padding: 20}}>
+            {props.children}
+        </div>
+    );
 }
+
+TabContainer.propTypes = {
+    children: PropTypes.node.isRequired,
+};
+
+
+const styles = theme => ({
+    card: {
+        margin: 10,
+    },
+    media: {
+        height: 194,
+    },
+    expand: {
+        transform: 'rotate(0deg)',
+        transition: theme.transitions.create('transform', {
+            duration: theme.transitions.duration.shortest,
+        }),
+    },
+    expandOpen: {
+        transform: 'rotate(180deg)',
+    },
+    avatar: {
+        backgroundColor: red[500],
+    },
+    flexGrow: {
+        flex: '1 1 auto',
+    },
+    generalItem: {
+        width: '25%'
+    }
+});
+
 
 class AccountCard extends Component {
     constructor(props, context) {
         super(props, context);
-
-        this.handleExpandChange = this.handleExpandChange.bind(this);
-        this.handleToggle = this.handleToggle.bind(this);
-        this.handleExpand = this.handleExpand.bind(this);
-        this.handleReduce = this.handleReduce.bind(this);
-
         this.state = {
-            expanded: false
+            expanded: true,
+            value: 0
         };
+
+        this.handleExpandClick = this.handleExpandClick.bind(this);
     }
 
-    handleExpandChange(expanded) {
-        this.setState({expanded: expanded});
+    handleExpandClick() {
+        this.setState({expanded: !this.state.expanded});
+    }
+
+    handleChange = (event, value) => {
+        this.setState({value});
     };
 
-    handleToggle(toggle) {
-        this.setState({expanded: toggle});
-    };
-
-    handleExpand() {
-        this.setState({expanded: true});
-    };
-
-    handleReduce() {
-        this.setState({expanded: false});
-    };
 
     render() {
+        const classes = this.props.classes;
+        const {value} = this.state;
+
         return (
             <div>
-                <Paper zDepth={1} style={{margin: 10}}>
-                    <Card expanded={this.state.expanded} onExpandChange={this.handleExpandChange}>
-                        <CardHeader
-                            title={this.props.account.name}
-                            subtitle={this.props.account.description}
-                            avatar={<StatusAvatar/>}
-                            actAsExpander={true}
-                            showExpandableButton={true}
-                        />
-                        <CardText expandable={true}>
-                            <div style={{display: 'flex', flexDirection: 'row', flexFlow: 'row wrap'}}>
-                                <List>
-                                    <Subheader>General</Subheader>
-                                    <ListItem
-                                        primaryText={this.props.account.id}
-                                        secondaryText="Account Id"
-                                        leftIcon={<Fingerprint/>}
-                                        disabled={true}
-                                    />
-                                    <ListItem
-                                        primaryText={this.props.account.provider}
-                                        secondaryText="Account Provider"
-                                        leftIcon={<Computer/>}
-                                        disabled={true}
-                                    />
-                                    <ListItem
-                                        primaryText={this.props.account.owner}
-                                        secondaryText="Account Owner"
-                                        leftIcon={<PermIdentity/>}
-                                        disabled={true}
-                                    />
-                                    <ListItem
-                                        primaryText={this.props.account.environment}
-                                        secondaryText="Environment"
-                                        leftIcon={<BeachAccess/>}
-                                        disabled={true}
-                                    />
-                                    <ListItem
-                                        primaryText={this.props.account.sensitive ? 'Yes' : 'No'}
-                                        secondaryText="Sensitive"
-                                        leftIcon={<Warning/>}
-                                        disabled={true}
-                                    />
-                                    <ListItem
-                                        primaryText={this.props.account.email}
-                                        secondaryText="Email"
-                                        leftIcon={<Email/>}
-                                        disabled={true}
-                                    />
-                                    <ListItem
-                                        primaryText={this.props.account.contacts}
-                                        secondaryText="Contacts"
-                                        leftIcon={<Contacts/>}
-                                        disabled={true}
-
-                                    />
-                                    <ListItem
-                                        primaryText={this.props.account.type ? this.props.account.type : 'Unknown'}
-                                        secondaryText="Type"
-                                        leftIcon={<Layers/>}
-                                        disabled={true}
-
-                                    />
+                <Card className={classes.card}>
+                    <CardHeader
+                        avatar={
+                            <Avatar aria-label="Status" className={classes.avatar}>
+                                {this.props.account.name.charAt(0).toUpperCase()}
+                            </Avatar>
+                        }
+                        title={this.props.account.name}
+                        subheader={this.props.account.description}
+                    />
+                    <Collapse in={this.state.expanded} transitionDuration="auto" unmountOnExit>
+                        <CardContent>
+                            <Tabs
+                                value={this.state.value}
+                                onChange={this.handleChange}
+                                indicatorColor="primary"
+                                textColor="primary"
+                                centered
+                            >
+                                <Tab label="General"/>
+                                <Tab label="Aliases"/>
+                                <Tab label="Regions"/>
+                            </Tabs>
+                            {value === 0 &&
+                            <TabContainer>
+                                <List dense={true} style={{display: 'flex', flexWrap: 'wrap'}}>
+                                    <ListItem className={classes.generalItem}>
+                                        <CopyToClipboardButton button={<Fingerprint/>} text={this.props.account.id}/>
+                                        <ListItemText primary={this.props.account.id} secondary="Id"/>
+                                    </ListItem>
+                                    <ListItem className={classes.generalItem}>
+                                        <CopyToClipboardButton button={<Computer/>} text={this.props.account.provider}/>
+                                        <ListItemText primary={this.props.account.provider} secondary="Provider"/>
+                                    </ListItem>
+                                    <ListItem className={classes.generalItem}>
+                                        <CopyToClipboardButton button={<PermIdentity/>}
+                                                               text={this.props.account.owner}/>
+                                        <ListItemText primary={this.props.account.owner} secondary="Owner"/>
+                                    </ListItem>
+                                    <ListItem className={classes.generalItem}>
+                                        <CopyToClipboardButton button={<BeachAccess/>}
+                                                               text={this.props.account.environment}/>
+                                        <ListItemText primary={this.props.account.environment}
+                                                      secondary="Environment"/>
+                                    </ListItem>
+                                    <ListItem className={classes.generalItem}>
+                                        <CopyToClipboardButton button={<Warning/>} text={this.props.account.sensitive}/>
+                                        <ListItemText primary={this.props.account.sensitive ? 'Yes' : 'No'}
+                                                      secondary="Sensitive"/>
+                                    </ListItem>
+                                    <ListItem className={classes.generalItem}>
+                                        <CopyToClipboardButton button={<Email/>} text={this.props.account.email}/>
+                                        <ListItemText primary={this.props.account.email} secondary="Email"/>
+                                    </ListItem>
+                                    <ListItem className={classes.generalItem}>
+                                        <CopyToClipboardButton button={<Contacts/>} text={this.props.account.contacts}/>
+                                        <ListItemText primary={this.props.account.contacts} secondary="Contacts"/>
+                                    </ListItem>
+                                    <ListItem className={classes.generalItem}>
+                                        <CopyToClipboardButton button={<Layers/>} text={this.props.account.type}/>
+                                        <ListItemText
+                                            primary={this.props.account.type ? this.props.account.type : 'Unknown'}
+                                            secondary="Type"/>
+                                    </ListItem>
                                 </List>
-                                <div>
-                                    <Subheader>Status</Subheader>
-                                    <AccountStatusStepper status='created'/>
-                                </div>
-                                <List>
-                                    <Subheader>Aliases</Subheader>
+                            </TabContainer>}
+                            {value === 1 &&
+                            <TabContainer>
+                                <List dense={true} style={{display: 'flex', flexWrap: 'wrap'}}>
                                     {this.props.account.aliases.map((alias, index) => {
                                         return (
-                                            <ListItem
-                                                key={index}
-                                                primaryText={alias}
-                                                disabled={true}
-                                            />
+                                            <ListItem key={index} className={classes.generalItem}>
+                                                <CopyToClipboardButton button={<SupervisorAccount/>} text={alias}/>
+                                                <ListItemText primary={alias}/>
+                                            </ListItem>
                                         )
                                     })}
                                 </List>
-                            </div>
-                        </CardText>
-                        <CardActions>
-                            <div style={{display: 'flex', flexDirection: 'row', flexFlow: 'row wrap'}}>
-                                <CopyToClipboardButton tooltip="Copy Account Id" text={this.props.account.id}/>
-                                <ServiceDrawer services={this.props.account.services}/>
-                                <JSONView data={this.props.account} />
-                            </div>
-                        </CardActions>
-                    </Card>
-                </Paper>
+                            </TabContainer>
+                            }
+                            {value === 2 &&
+                            <TabContainer>
+                                <Table>
+                                    <TableHead displaySelectAll={false} adjustForCheckbox={false}>
+                                        <TableRow>
+                                            <TableCell>Region</TableCell>
+                                            <TableCell>Status</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody displayRowCheckbox={false}>
+                                        <TableRow>
+                                            <TableCell>us-east-1</TableCell>
+                                            <TableCell>Created</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>us-west-2</TableCell>
+                                            <TableCell>Created</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>eu-west-1</TableCell>
+                                            <TableCell>Created</TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </TabContainer>
+                            }
+                        </CardContent>
+                    </Collapse>
+                    <CardActions disableActionSpacing>
+                        <ServiceDialog services={this.props.account.services}/>
+                        <JSONDialog data={this.props.account}/>
+                        <div className={classes.flexGrow}/>
+                        <IconButton
+                            className={classnames(classes.expand, {
+                                [classes.expandOpen]: this.state.expanded,
+                            })}
+                            onClick={this.handleExpandClick}
+                            aria-expanded={this.state.expanded}
+                            aria-label="Show more"
+                        >
+                            <ExpandMoreIcon/>
+                        </IconButton>
+                    </CardActions>
+                </Card>
             </div>
         );
     }
 }
 
-export default AccountCard;
+AccountCard.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(AccountCard);

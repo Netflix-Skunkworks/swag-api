@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
+import Card, {CardActions, CardHeader, CardContent} from 'material-ui/Card';
+import Button from 'material-ui/Button';
+
 
 class Error extends Component {
     constructor(props, context) {
@@ -8,9 +9,9 @@ class Error extends Component {
         this.handleRetry = this.handleRetry.bind(this);
     }
 
-    handleRetry = () => {
+    handleRetry() {
         this.setState({open: true});
-    };
+    }
 
     render() {
         return (
@@ -19,11 +20,11 @@ class Error extends Component {
                     title="Error"
                     subtitle="Something has gone terribly wrong"
                 />
-                <CardText>
+                <CardContent>
                     SWAG isn't acting like itself at the moment, would you like to retry?
-                </CardText>
+                </CardContent>
                 <CardActions>
-                    <FlatButton label="Retry" onTouchTap={this.handleRetry}/>
+                    <Button label="Retry" onClick={this.handleRetry}/>
                 </CardActions>
             </Card>
         )

@@ -1,33 +1,34 @@
 import React, {Component} from 'react';
-import Subheader from 'material-ui/Subheader';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import { withStyles } from 'material-ui/styles';
+
+import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Table';
 
 import CopyToClipboardButton from './CopyToClipboardButton';
 
+
+const styles = theme => ({});
 
 class MetadataTable extends Component {
     render() {
         return (
             <div>
-                <Subheader>Service Metadata</Subheader>
                 <Table>
-                    <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-
+                    <TableHead displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
-                            <TableHeaderColumn>Key</TableHeaderColumn>
-                            <TableHeaderColumn>Value</TableHeaderColumn>
-                            <TableHeaderColumn/>
+                            <TableCell>Key</TableCell>
+                            <TableCell>Value</TableCell>
+                            <TableCell/>
                         </TableRow>
-                    </TableHeader>
+                    </TableHead>
                     <TableBody displayRowCheckbox={false}>
                         {Object.entries(this.props.data).map(([key, value]) => {
                             return (
                                 <TableRow key={key}>
-                                    <TableRowColumn>{key}</TableRowColumn>
-                                    <TableRowColumn>{value}</TableRowColumn>
-                                    <TableRowColumn>
-                                        <CopyToClipboardButton tooltip="Copy Value" text={value}/>
-                                    </TableRowColumn>
+                                    <TableCell>{key}</TableCell>
+                                    <TableCell>{value}</TableCell>
+                                    <TableCell>
+                                        <CopyToClipboardButton text={value}/>
+                                    </TableCell>
                                 </TableRow>
                             )
                         })}
@@ -38,4 +39,4 @@ class MetadataTable extends Component {
     }
 }
 
-export default MetadataTable;
+export default withStyles(styles)(MetadataTable);

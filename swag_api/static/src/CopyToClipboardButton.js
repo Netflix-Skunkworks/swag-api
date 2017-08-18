@@ -2,9 +2,8 @@ import React, {Component} from 'react';
 import IconButton from 'material-ui/IconButton';
 import Snackbar from 'material-ui/Snackbar';
 
-import ContentCopy from 'material-ui/svg-icons/content/content-copy';
-
 import CopyToClipboard from 'react-copy-to-clipboard';
+
 
 
 class CopyToClipboardButton extends Component {
@@ -13,29 +12,25 @@ class CopyToClipboardButton extends Component {
         this.state = {
             open: false,
             value: '',
-            copied: false
+            copied: false,
         };
+
+        this.handleRequestClose = this.handleRequestClose.bind(this);
     }
 
-    handleTouchTap = () => {
-        this.setState({
-            open: true,
-        });
-    };
-
-    handleRequestClose = () => {
+    handleRequestClose() {
         this.setState({
             open: false,
         });
-    };
+    }
 
     render() {
         return (
             <div>
                 <CopyToClipboard text={this.props.text}
                                  onCopy={() => this.setState({copied: true, open: true})}>
-                    <IconButton tooltip={this.props.tooltip}>
-                        <ContentCopy/>
+                    <IconButton>
+                        {this.props.button}
                     </IconButton>
                 </CopyToClipboard>
                 <Snackbar

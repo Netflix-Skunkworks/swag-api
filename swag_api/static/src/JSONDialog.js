@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {withStyles} from 'material-ui/styles';
 import IconButton from 'material-ui/IconButton';
-import Computer from 'material-ui-icons/Computer';
+import Search from 'material-ui-icons/Search';
 import Typography from 'material-ui/Typography';
 
 import Dialog from 'material-ui/Dialog';
@@ -10,8 +10,9 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import ArrowBack from 'material-ui-icons/ArrowBack';
 import Slide from 'material-ui/transitions/Slide';
-import ServiceCard from './ServiceCard';
 
+
+import ReactJson from 'react-json-view';
 
 const styles = theme => ({
     appBar: {
@@ -37,7 +38,7 @@ const styles = theme => ({
 });
 
 
-class ServiceDialog extends React.PureComponent {
+class JSONDialog extends React.PureComponent {
     constructor(props, context) {
         super(props, context);
         this.handleOpen = this.handleOpen.bind(this);
@@ -58,10 +59,11 @@ class ServiceDialog extends React.PureComponent {
 
     render() {
         const {classes} = this.props;
+
         return (
             <div>
                 <IconButton onClick={this.handleOpen}>
-                    <Computer/>
+                    <Search/>
                 </IconButton>
                 <Dialog
                     fullScreen
@@ -75,12 +77,12 @@ class ServiceDialog extends React.PureComponent {
                                 <ArrowBack/>
                             </IconButton>
                             <Typography type="title" color="inherit" className={classes.flex}>
-                                Services
+                                Raw JSON
                             </Typography></Toolbar>
                     </AppBar>
                     <div className={classes.container}>
                         <div className={classes.content}>
-                            {this.props.services.map((item) => <ServiceCard key={item.id} service={item}/>)}
+                            <ReactJson src={this.props.data}/>
                         </div>
                     </div>
                 </Dialog>
@@ -89,8 +91,8 @@ class ServiceDialog extends React.PureComponent {
     }
 }
 
-ServiceDialog.propTypes = {
+JSONDialog.propTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(ServiceDialog);
+export default withStyles(styles)(JSONDialog);

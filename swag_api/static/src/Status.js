@@ -1,11 +1,5 @@
 import React, {Component} from 'react';
 
-import {
-    Step,
-    Stepper,
-    StepLabel,
-    StepContent
-} from 'material-ui/Stepper';
 
 
 class AccountStatusStepper extends Component {
@@ -38,57 +32,6 @@ class AccountStatusStepper extends Component {
     render() {
         return (
             <div>
-                <Stepper linear={false} orientation="vertical" activeStep={this.state.stepIndex}>
-                    <Step>
-                        <StepLabel>Created</StepLabel>
-                        <StepContent>
-                            <p>
-                                Account has been created but infrastructure has not yet been established.
-                            </p>
-                        </StepContent>
-                    </Step>
-                    <Step>
-                        <StepLabel>In-progress</StepLabel>
-                        <StepContent>
-                            <p>
-                                Account infrastructure is currently being deployed.
-                            </p>
-                        </StepContent>
-                    </Step>
-                    <Step>
-                        <StepLabel>Ready</StepLabel>
-                        <StepContent>
-                            <p>
-                                Account is ready for deployment.
-                            </p>
-                        </StepContent>
-                    </Step>
-                    <Step>
-                        <StepLabel>Deprecated</StepLabel>
-                        <StepContent>
-                            <p>
-                                Account has been marked as deprecated, no new services should be deployed into this
-                                account.
-                            </p>
-                        </StepContent>
-                    </Step>
-                    <Step>
-                        <StepLabel>In-active</StepLabel>
-                        <StepContent>
-                            <p>
-                                Account has been evacuated of all services.
-                            </p>
-                        </StepContent>
-                    </Step>
-                    <Step>
-                        <StepLabel>Deleted</StepLabel>
-                        <StepContent>
-                            <p>
-                                Account has been marked as deleted. No services still exist in this account.
-                            </p>
-                        </StepContent>
-                    </Step>
-                </Stepper>
             </div>
         );
     }

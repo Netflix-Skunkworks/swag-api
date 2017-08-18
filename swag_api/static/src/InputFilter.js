@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import debounce from 'debounce';
 
 import TextField from 'material-ui/TextField';
-import SearchIcon from 'material-ui/svg-icons/action/search';
+import SearchIcon from 'material-ui-icons/Search';
 
 
 export default function inputFilterFactory(store) {
@@ -64,11 +64,11 @@ export default function inputFilterFactory(store) {
         render() {
             return (
                 <div style={{position: 'relative', display: 'flex', justifyContent: 'flex-end', flexDirection: 'row', margin: 10}}>
-                    <SearchIcon style={{position: 'absolute', right: 0, top: 15, width: 20, height: 20}}/>
+                    <SearchIcon style={{position: 'absolute', right: 0, top: 10, width: 20, height: 20}}/>
                     <TextField
                         onChange={this.handleChange}
                         value={this.state.value}
-                        hintText="Name, environment, etc,."
+                        placeholder="Name, environment, etc,."
                         style={{width: '100%'}}
                     />
                 </div>

@@ -1,5 +1,6 @@
-import React, {Component} from 'react';
-import CircularProgress from 'material-ui/CircularProgress';
+import React from 'react';
+import { CircularProgress } from 'material-ui/Progress';
+import { withStyles } from 'material-ui/styles';
 import fuzzyFilterFactory from './FuzzyFilterFactory';
 
 import AccountCard from './AccountCard';
@@ -7,7 +8,7 @@ import AccountCard from './AccountCard';
 const {InputFilter, FilterResults} = fuzzyFilterFactory();
 
 
-const styles = {
+const styles = theme => ({
     search: {
         display: 'flex',
         flexDirection: 'row',
@@ -28,10 +29,10 @@ const styles = {
         alignItems: 'center',
         justifyContent: 'center'
     }
-};
+});
 
 const fuseConfig = {
-    keys: ['environment', 'id', 'sensitive', 'owner', 'provider', 'tags', 'aliases', 'contacts'],
+    keys: ['environment', 'id', 'sensitive', 'owner', 'provider', 'tags', 'aliases', 'contacts', 'email'],
     threshold: 0.6,
     distance: 100,
     shouldSort: true
@@ -50,11 +51,13 @@ const prefilters = [
     }
 ];
 
-class Search extends Component {
+class Search extends React.Component {
     render() {
+        const classes = this.props.classes;
+
         return (
-            <div style={styles.container}>
-                <InputFilter style={styles.search} debounceTime={200}/>
+            <div className={classes.container}>
+                <InputFilter className={classes.search} debounceTime={200}/>
                 <FilterResults
                     items={this.props.data}
                     fuseConfig={fuseConfig}
@@ -69,10 +72,10 @@ class Search extends Component {
                     }}
                 </FilterResults>
                 {this.props.loading ?
-                    <div style={styles.loadingProgress}><CircularProgress size={80} thickness={5}/></div> : null}
+                    <div className={classes.loadingProgress}><CircularProgress size={80} /></div> : null}
             </div>
         );
     }
 }
 
-export default Search;
+export default withStyles(styles)(Search);
