@@ -40,13 +40,11 @@ const fuseConfig = {
 
 const prefilters = [
     {
-        regex: /\S+:\S+/g,
+        regex: /.*:.*/g,
         handler: (match, items, Fuse) => {
             const [key, value] = match.split(':');
-            const preConfig = fuseConfig;
-            preConfig.keys = [key];
-            const fuse = new Fuse(items, preConfig);
-            return fuse.search(value);
+            const fuse = new Fuse(items, {keys: [key], threshold: 0.6, shouldSort: true, distance: 100});
+            return fuse.search(value.trim());
         }
     }
 ];
@@ -57,7 +55,7 @@ class Search extends React.Component {
 
         return (
             <div className={classes.container}>
-                <InputFilter className={classes.search} debounceTime={200}/>
+                <InputFilter className={classes.search} keys={fuseConfig.keys} debounceTime={200}/>
                 <FilterResults
                     items={this.props.data}
                     fuseConfig={fuseConfig}
