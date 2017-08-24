@@ -7,7 +7,6 @@ import Card, {CardHeader, CardContent, CardActions} from 'material-ui/Card';
 import Collapse from 'material-ui/transitions/Collapse';
 import Avatar from 'material-ui/Avatar';
 import IconButton from 'material-ui/IconButton';
-import red from 'material-ui/colors/red';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 
 import List, {ListItem, ListItemText} from 'material-ui/List';
@@ -22,12 +21,53 @@ import Email from 'material-ui-icons/Email';
 import Contacts from 'material-ui-icons/Contacts';
 import Layers from 'material-ui-icons/Layers';
 import SupervisorAccount from 'material-ui-icons/SupervisorAccount';
+import Check from 'material-ui-icons/Check';
 
 import CopyToClipboardButton from './CopyToClipboardButton';
 import ServiceDialog from './ServiceDialog';
 import JSONDialog from './JSONDialog';
 import Tabs, {Tab} from 'material-ui/Tabs';
+import green from 'material-ui/colors/green';
+import red from 'material-ui/colors/red';
+import grey from 'material-ui/colors/grey';
+import blue from 'material-ui/colors/blue';
 
+function groupBy(xs, key) {
+    return xs.reduce(function (rv, x) {
+        (rv[x[key]] = rv[x[key]] || []).push(x);
+        return rv;
+    }, {});
+}
+
+function determineStatusColor(status) {
+    let ready = groupBy(status, 'status');
+    let inProgress = groupBy(status, 'in-progress');
+    let created = groupBy(status, 'created');
+
+    if (ready) {
+        return green[500];
+    } else if (inProgress) {
+        return blue[500];
+    } else if (created) {
+        return red[500];
+    }
+    return grey[500];
+}
+
+function determineStatus(status) {
+    let ready = groupBy(status, 'status');
+    let inProgress = groupBy(status, 'in-progress');
+    let created = groupBy(status, 'created');
+
+    if (ready) {
+        return 'ready';
+    } else if (inProgress) {
+        return 'in-progress';
+    } else if (created) {
+        return 'created';
+    }
+    return 'unknown';
+}
 
 function TabContainer(props) {
     return (
@@ -57,9 +97,6 @@ const styles = theme => ({
     },
     expandOpen: {
         transform: 'rotate(180deg)',
-    },
-    avatar: {
-        backgroundColor: red[500],
     },
     flexGrow: {
         flex: '1 1 auto',
@@ -99,8 +136,8 @@ class AccountCard extends Component {
                 <Card className={classes.card}>
                     <CardHeader
                         avatar={
-                            <Avatar aria-label="Status" className={classes.avatar}>
-                                {this.props.account.name.charAt(0).toUpperCase()}
+                            <Avatar aria-label="Status" style={{backgroundColor: determineStatusColor(this.props.account.status)}}>
+                                {this.props.account.name.charAt(0)}
                             </Avatar>
                         }
                         title={this.props.account.name}
@@ -160,6 +197,12 @@ class AccountCard extends Component {
                                             primary={this.props.account.type ? this.props.account.type : 'Unknown'}
                                             secondary="Type"/>
                                     </ListItem>
+                                    <ListItem className={classes.generalItem}>
+                                        <CopyToClipboardButton button={<Check/>} text={this.props.account.type}/>
+                                        <ListItemText
+                                            primary={determineStatus(this.props.account.status)}
+                                            secondary="Status"/>
+                                    </ListItem>
                                 </List>
                             </TabContainer>}
                             {value === 1 &&
@@ -179,25 +222,21 @@ class AccountCard extends Component {
                             {value === 2 &&
                             <TabContainer>
                                 <Table>
-                                    <TableHead displaySelectAll={false} adjustForCheckbox={false}>
+                                    <TableHead>
                                         <TableRow>
                                             <TableCell>Region</TableCell>
                                             <TableCell>Status</TableCell>
                                         </TableRow>
                                     </TableHead>
-                                    <TableBody displayRowCheckbox={false}>
-                                        <TableRow>
-                                            <TableCell>us-east-1</TableCell>
-                                            <TableCell>Created</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>us-west-2</TableCell>
-                                            <TableCell>Created</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>eu-west-1</TableCell>
-                                            <TableCell>Created</TableCell>
-                                        </TableRow>
+                                    <TableBody>
+                                        {this.props.account.status.map((region, index) => {
+                                            return (
+                                                <TableRow key={index}>
+                                                    <TableCell>{region.region}</TableCell>
+                                                    <TableCell>{region.status}</TableCell>
+                                                </TableRow>
+                                            )
+                                        })}
                                     </TableBody>
                                 </Table>
                             </TabContainer>
