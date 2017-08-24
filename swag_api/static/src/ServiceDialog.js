@@ -80,7 +80,7 @@ class ServiceDialog extends React.PureComponent {
                     </AppBar>
                     <div className={classes.container}>
                         <div className={classes.content}>
-                            {this.props.services.map((item) => <ServiceCard key={item.id} service={item}/>)}
+                            {this.props.services.map((item, index) => <ServiceCard key={index} service={item}/>)}
                         </div>
                     </div>
                 </Dialog>
