@@ -13,6 +13,7 @@
     "react": "^15.6.1",
     "react-autosuggest": "^9.3.2",
     "react-copy-to-clipboard": "^5.0.0",
+    "react-csv": "^1.0.8",
     "react-dom": "^15.6.1",
     "react-json-view": "^1.12.0",
     "react-scripts": "1.0.10",
