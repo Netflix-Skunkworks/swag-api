@@ -31,8 +31,8 @@ function renderInput(inputProps) {
 }
 
 function renderSuggestion(suggestion, {query, isHighlighted}) {
-    const matches = match(suggestion, query);
-    const parts = parse(suggestion, matches);
+    const matches = match(suggestion.name, query);
+    const parts = parse(suggestion.name, matches);
 
     return (
         <MenuItem selected={isHighlighted} component="div">
@@ -62,7 +62,7 @@ function renderSuggestionsContainer(options) {
 }
 
 function getSuggestionValue(suggestion) {
-    return suggestion + ': ';
+    return suggestion.name + ': ';
 }
 
 function getSuggestions(suggestions, value) {
@@ -74,7 +74,7 @@ function getSuggestions(suggestions, value) {
         ? []
         : suggestions.filter(suggestion => {
             const keep =
-                count < 5 && suggestion.toLowerCase().slice(0, inputLength) === inputValue;
+                count < 5 && suggestion.name.toLowerCase().slice(0, inputLength) === inputValue;
 
             if (keep) {
                 count += 1;
