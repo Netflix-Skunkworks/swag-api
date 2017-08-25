@@ -1,6 +1,6 @@
 import React from 'react';
-import { CircularProgress } from 'material-ui/Progress';
-import { withStyles } from 'material-ui/styles';
+import {CircularProgress} from 'material-ui/Progress';
+import {withStyles} from 'material-ui/styles';
 import fuzzyFilterFactory from './FuzzyFilterFactory';
 
 import AccountCard from './AccountCard';
@@ -32,10 +32,53 @@ const styles = theme => ({
 });
 
 const fuseConfig = {
-    keys: ['environment', 'id', 'sensitive', 'owner', 'provider', 'tags', 'aliases', 'contacts', 'email'],
+    keys: [
+        {
+            name: 'name',
+            weight: 0.8
+        },
+        {
+            name: 'environment',
+            weight: 0.3
+
+        }, {
+            name: 'id',
+            weight: 0.8
+
+        }, {
+            name: 'sensitive',
+            weight: 0.4
+
+        }, {
+            name: 'owner',
+            weight: 0.7
+
+        }, {
+            name: 'provider',
+            weight: 0.2
+
+        }, {
+            name: 'tags',
+            weight: 0.5
+
+        }, {
+            name: 'aliases',
+            weight: 0.6
+
+        }, {
+            name: 'contacts',
+            weight: 0.3
+
+        }, {
+            name: 'email',
+            weight: 0.7
+
+        }],
     threshold: 0.6,
     distance: 100,
-    shouldSort: true
+    tokenize: true,
+    shouldSort: true,
+    matchAllTokens: true
 };
 
 const prefilters = [
@@ -70,7 +113,7 @@ class Search extends React.Component {
                     }}
                 </FilterResults>
                 {this.props.loading ?
-                    <div className={classes.loadingProgress}><CircularProgress size={80} /></div> : null}
+                    <div className={classes.loadingProgress}><CircularProgress size={80}/></div> : null}
             </div>
         );
     }
