@@ -5,7 +5,7 @@ import blue from 'material-ui/colors/blue';
 import pink from 'material-ui/colors/pink';
 import red from 'material-ui/colors/red';
 
-import AppTabs from './AppTabs';
+import AppToolbar from './AppToolbar';
 
 
 const theme = createMuiTheme({
@@ -22,7 +22,7 @@ const theme = createMuiTheme({
 function Palette() {
     return (
         <MuiThemeProvider theme={theme}>
-            <AppTabs/>
+            <AppToolbar/>
         </MuiThemeProvider>
     );
 }
