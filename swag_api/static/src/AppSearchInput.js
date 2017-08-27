@@ -1,34 +1,13 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import debounce from 'debounce';
-import SearchIcon from 'material-ui-icons/Search';
 import Autosuggest from 'react-autosuggest';
-import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import {MenuItem} from 'material-ui/Menu';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
 import {withStyles} from 'material-ui/styles';
 
-
-function renderInput(inputProps) {
-    const {classes, home, value, ref, ...other} = inputProps;
-
-    return (
-        <TextField
-            autoFocus={home}
-            className={classes.textField}
-            value={value}
-            inputRef={ref}
-            InputProps={{
-                classes: {
-                    input: classes.input,
-                },
-                ...other,
-            }}
-        />
-    );
-}
 
 function renderSuggestion(suggestion, {query, isHighlighted}) {
     const matches = match(suggestion.name, query);
@@ -105,12 +84,25 @@ const styles = theme => ({
         padding: 0,
         listStyleType: 'none',
     },
-    textField: {
+    input: {
+        font: 'inherit',
+        padding: `${theme.spacing.unit}px ${theme.spacing.unit}px ${theme.spacing.unit}px ${theme
+            .spacing.unit * 9}px`,
+        border: 0,
+        display: 'block',
+        verticalAlign: 'middle',
+        whiteSpace: 'normal',
+        background: 'none',
+        margin: 0, // Reset for Safari
+        color: 'inherit',
         width: '100%',
-    },
+        '&:focus': {
+            outline: 0,
+        },
+    }
 });
 
-export default function inputFilterFactory(store) {
+export default function appSearchFilterFactory(store) {
     function updateValue(value, callback) {
         const overrideValue = callback(value);
         if (typeof overrideValue === 'string') {
@@ -183,38 +175,27 @@ export default function inputFilterFactory(store) {
         render() {
             const {classes} = this.props;
             return (
-                <div style={{
-                    position: 'relative',
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    flexDirection: 'row',
-                    margin: 10
-                }}>
-                    <SearchIcon style={{position: 'absolute', right: 0, top: 5, width: 20, height: 20}}/>
-                    <Autosuggest
-                        theme={{
-                            container: classes.container,
-                            suggestionsContainerOpen: classes.suggestionsContainerOpen,
-                            suggestionsList: classes.suggestionsList,
-                            suggestion: classes.suggestion,
-                        }}
-                        renderInputComponent={renderInput}
-                        suggestions={this.state.suggestions}
-                        onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
-                        onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
-                        renderSuggestionsContainer={renderSuggestionsContainer}
-                        getSuggestionValue={getSuggestionValue}
-                        renderSuggestion={renderSuggestion}
-                        highlightFirstSuggestion={true}
-                        inputProps={{
-                            autoFocus: true,
-                            classes,
-                            placeholder: 'Full Search or Prefix',
-                            value: this.state.value,
-                            onChange: this.handleChange,
-                        }}
-                    />
-                </div>
+                <Autosuggest
+                    theme={{
+                        container: classes.container,
+                        suggestionsContainerOpen: classes.suggestionsContainerOpen,
+                        suggestionsList: classes.suggestionsList,
+                        suggestion: classes.suggestion,
+                    }}
+                    suggestions={this.state.suggestions}
+                    onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
+                    onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
+                    renderSuggestionsContainer={renderSuggestionsContainer}
+                    getSuggestionValue={getSuggestionValue}
+                    renderSuggestion={renderSuggestion}
+                    highlightFirstSuggestion={true}
+                    inputProps={{
+                        autoFocus: true,
+                        className: classes.input,
+                        value: this.state.value,
+                        onChange: this.handleChange,
+                    }}
+                />
             );
         }
     }

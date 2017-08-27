@@ -10,7 +10,8 @@ import FileDownload from 'material-ui-icons/FileDownload';
 import {CSVLink} from 'react-csv';
 
 
-import Search from './Search';
+import AppSearch from './AppSearch';
+import AppSearchResults from './AppSearchResults';
 
 
 const styles = theme => ({
@@ -88,12 +89,14 @@ class AppToolbar extends Component {
                         <Typography type="title" color="inherit" className={classes.flex}>
                             SWAG
                         </Typography>
+                        <AppSearch/>
                         <IconButton color="contrast" aria-label="Download">
-                            <CSVLink filename={"accounts.csv"} data={this.getCSVData()}><FileDownload style={{fill: 'white'}} /></CSVLink>
+                            <CSVLink filename={"accounts.csv"} data={this.getCSVData()}><FileDownload
+                                style={{fill: 'white'}}/></CSVLink>
                         </IconButton>
                     </Toolbar>
                 </AppBar>
-                <Search data={this.state.accounts} loading={this.state.loading}/>
+                <AppSearchResults data={this.state.accounts} loading={this.state.loading}/>
             </div>
         );
     }

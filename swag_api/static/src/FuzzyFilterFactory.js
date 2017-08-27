@@ -1,11 +1,12 @@
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import inputFilterFactory from './InputFilter';
 import filterResultsFactory from './FilterResults';
+import appSearchFilterFactory from './AppSearchInput';
+
 
 export default function fuzzyFilterFactory() {
     const store = new BehaviorSubject();
     return {
-        InputFilter: inputFilterFactory(store),
-        FilterResults: filterResultsFactory(store)
+        FilterResults: filterResultsFactory(store),
+        AppSearchInputFilter: appSearchFilterFactory(store)
     };
 }

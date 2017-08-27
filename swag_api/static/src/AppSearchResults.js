@@ -1,19 +1,13 @@
 import React from 'react';
 import {CircularProgress} from 'material-ui/Progress';
 import {withStyles} from 'material-ui/styles';
-import fuzzyFilterFactory from './FuzzyFilterFactory';
+
+import {fuseConfig, FilterResults} from './AppSearch';
 
 import AccountCard from './AccountCard';
 
-const {InputFilter, FilterResults} = fuzzyFilterFactory();
-
 
 const styles = theme => ({
-    search: {
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'flex-end'
-    },
     container: {
         padding: '16px',
         fontWeight: '500',
@@ -31,55 +25,6 @@ const styles = theme => ({
     }
 });
 
-const fuseConfig = {
-    keys: [
-        {
-            name: 'name',
-            weight: 0.8
-        },
-        {
-            name: 'environment',
-            weight: 0.3
-
-        }, {
-            name: 'id',
-            weight: 0.8
-
-        }, {
-            name: 'sensitive',
-            weight: 0.4
-
-        }, {
-            name: 'owner',
-            weight: 0.7
-
-        }, {
-            name: 'provider',
-            weight: 0.2
-
-        }, {
-            name: 'tags',
-            weight: 0.5
-
-        }, {
-            name: 'aliases',
-            weight: 0.6
-
-        }, {
-            name: 'contacts',
-            weight: 0.3
-
-        }, {
-            name: 'email',
-            weight: 0.7
-
-        }],
-    threshold: 0.6,
-    distance: 100,
-    tokenize: true,
-    shouldSort: true,
-    matchAllTokens: true
-};
 
 const prefilters = [
     {
@@ -92,13 +37,12 @@ const prefilters = [
     }
 ];
 
-class Search extends React.Component {
+class AppSearchResults extends React.Component {
     render() {
         const classes = this.props.classes;
 
         return (
             <div className={classes.container}>
-                <InputFilter className={classes.search} keys={fuseConfig.keys} debounceTime={200}/>
                 <FilterResults
                     items={this.props.data}
                     fuseConfig={fuseConfig}
@@ -119,4 +63,4 @@ class Search extends React.Component {
     }
 }
 
-export default withStyles(styles)(Search);
+export default withStyles(styles)(AppSearchResults);
