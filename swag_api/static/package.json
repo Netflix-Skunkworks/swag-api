@@ -16,6 +16,7 @@
     "react-csv": "^1.0.8",
     "react-dom": "^15.6.1",
     "react-json-view": "^1.12.0",
+    "react-refetch": "^1.0.1",
     "react-scripts": "1.0.10",
     "react-tap-event-plugin": "^2.0.1",
     "rxjs": "^5.4.0",

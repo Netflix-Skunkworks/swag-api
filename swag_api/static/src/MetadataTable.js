@@ -5,10 +5,8 @@ import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Tabl
 import Typography from 'material-ui/Typography';
 
 
-import CopyToClipboardButton from './CopyToClipboardButton';
-
-
 const styles = theme => ({});
+
 
 class MetadataTable extends Component {
     getGeneral() {
@@ -17,68 +15,38 @@ class MetadataTable extends Component {
         });
     }
 
-    getSubTables() {
-        return Object.entries(this.props.data).filter(([key, value]) => {
-            return Array.isArray(value);
-        });
-    }
-
     render() {
         return (
             <div>
                 <Typography type="subheading" gutterBottom>
-                    General
+                    Metadata
                 </Typography>
                 <Table>
                     <TableHead>
                         <TableRow>
                             <TableCell>Key</TableCell>
                             <TableCell>Value</TableCell>
-                            <TableCell/>
                         </TableRow>
                     </TableHead>
-                    <TableBody>
-                        {this.getGeneral().map((item, index) => {
-                            return (
-                                <TableRow key={index}>
-                                    <TableCell>{item[0]}</TableCell>
-                                    <TableCell>{item[1]}</TableCell>
-                                    <TableCell>
-                                        <CopyToClipboardButton text={item[1]}/>
-                                    </TableCell>
-                                </TableRow>
-                            )
-                        })}
-                    </TableBody>
-                </Table>
-                {this.getSubTables().map((item) => {
-                    return item[1].map((value, index) => {
-                        return (
-                            <Table key={index}>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell>Key</TableCell>
-                                        <TableCell>Value</TableCell>
-                                        <TableCell/>
+                    {this.getGeneral().length ? (
+                        <TableBody>
+                            {this.getGeneral().map((item, index) => {
+                                return (
+                                    <TableRow key={index}>
+                                        <TableCell>{item[0]}</TableCell>
+                                        <TableCell>{item[1]}</TableCell>
                                     </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {Object.entries(value).map(([key, value], index) => {
-                                        return (
-                                            <TableRow key={index}>
-                                                <TableCell>{key}</TableCell>
-                                                <TableCell>{value}</TableCell>
-                                                <TableCell>
-                                                    <CopyToClipboardButton text={value}/>
-                                                </TableCell>
-                                            </TableRow>
-                                        )
-                                    })}
-                                </TableBody>
-                            </Table>
-                        )
-                    })
-                })}
+                                )
+                            })}
+                        </TableBody>
+                    ) : (
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>No Metadata</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    )}
+                </Table>
             </div>
         )
     }

@@ -7,6 +7,8 @@ import Avatar from 'material-ui/Avatar';
 import green from 'material-ui/colors/green';
 
 
+import RoleTable from './RoleTable';
+import S3MetadataTable from './S3MetadataTable';
 import MetadataTable from './MetadataTable';
 
 
@@ -41,7 +43,12 @@ class ServiceCard extends Component {
                         subheader={this.props.service.description}
                     />
                     <CardContent>
-                        <MetadataTable data={metadata}/>
+                        <RoleTable data={this.props.service.roles} />
+                        {this.props.service.name === 's3' ? (
+                            <S3MetadataTable data={metadata}/>
+                        ) : (
+                            <MetadataTable data={metadata}/>
+                        )}
                     </CardContent>
                 </Card>
             </div>

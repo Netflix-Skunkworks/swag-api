@@ -1,29 +1,12 @@
-import React from 'react';
-import {CircularProgress} from 'material-ui/Progress';
-import {withStyles} from 'material-ui/styles';
+import React, {Component} from 'react';
+
+import {connect} from 'react-refetch';
 
 import {fuseConfig, FilterResults} from './AppSearch';
 
 import AccountCard from './AccountCard';
-
-
-const styles = theme => ({
-    container: {
-        padding: '16px',
-        fontWeight: '500',
-        boxSizing: 'border-box',
-        position: 'relative',
-        whiteSpace: 'nowrap'
-    },
-    loadingProgress: {
-        height: '100%',
-        padding: '0',
-        margin: '0',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    }
-});
+import Error from './Error';
+import ResultLoader from './ResultLoader';
 
 
 const prefilters = [
@@ -37,30 +20,41 @@ const prefilters = [
     }
 ];
 
-class AppSearchResults extends React.Component {
-    render() {
-        const classes = this.props.classes;
 
-        return (
-            <div className={classes.container}>
-                <FilterResults
-                    items={this.props.data}
-                    fuseConfig={fuseConfig}
-                    prefilters={prefilters}
-                >
-                    {filteredItems => {
-                        return (
-                            <div>
-                                {filteredItems.map((item) => <AccountCard key={item.id} account={item}/>)}
-                            </div>
-                        )
-                    }}
-                </FilterResults>
-                {this.props.loading ?
-                    <div className={classes.loadingProgress}><CircularProgress size={80}/></div> : null}
-            </div>
-        );
+class AppSearchResults extends Component {
+    render() {
+        const {resultFetch} = this.props;
+        if (resultFetch.pending) {
+            return <ResultLoader/>;
+        } else if (resultFetch.rejected) {
+            return <Error status={resultFetch.rejected}/>;
+        } else if (resultFetch.fulfilled) {
+            return <FilterResults
+                items={resultFetch.value}
+                fuseConfig={fuseConfig}
+                prefilters={prefilters}
+            >
+                {filteredItems => {
+                    return (
+                        <div>
+                            {filteredItems.map((item) => <AccountCard key={item.id} account={item}/>)}
+                        </div>
+                    )
+                }}
+            </FilterResults>
+        }
     }
 }
 
-export default withStyles(styles)(AppSearchResults);
+export default connect(props => {
+    const url = '/api/1/accounts';
+    return {
+        resultFetch: url,
+        refreshFetch: () => ({
+            resultFetch: {
+                url,
+                force: true,
+                refreshing: true
+            }
+        })
+    }})(AppSearchResults);

@@ -1,34 +1,27 @@
 import React, {Component} from 'react';
-import Card, {CardActions, CardHeader, CardContent} from 'material-ui/Card';
 import Button from 'material-ui/Button';
+import Snackbar, {SnackbarContent} from 'material-ui/Snackbar';
+
+
+const action = (
+    <Button color="accent" dense>
+        Retry
+    </Button>
+);
 
 
 class Error extends Component {
-    constructor(props, context) {
-        super(props, context);
-        this.handleRetry = this.handleRetry.bind(this);
-    }
-
-    handleRetry() {
-        this.setState({open: true});
-    }
-
     render() {
+        const open = this.props.status;
         return (
-            <Card>
-                <CardHeader
-                    title="Error"
-                    subtitle="Something has gone terribly wrong"
+            <Snackbar open={open}>
+                <SnackbarContent
+                    message="Error fetching account data. "
+                    action={action}
                 />
-                <CardContent>
-                    SWAG isn't acting like itself at the moment, would you like to retry?
-                </CardContent>
-                <CardActions>
-                    <Button label="Retry" onClick={this.handleRetry}/>
-                </CardActions>
-            </Card>
+            </Snackbar>
         )
     }
 }
 
-export default Error;
+export default Error
