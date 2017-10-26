@@ -22,17 +22,21 @@ class NameSpace(Resource):
         super(NameSpace, self).__init__()
 
     def get(self, namespace):
-        # self.reqparse.add_argument('schemaVersion', type=int, default=2)
-        args = self.reqparse.parse_args()
         swag_opts = {
             'swag.type': current_app.config.get('SWAG_BACKEND_TYPE', 'dynamodb'),
             'swag.namespace': namespace
         }
         swag = SWAGManager(**parse_swag_config_options(swag_opts))
 
-        # if args['schemaVersion'] == 1:
-        #     return {namespace: [v2.downgrade(x) for x in swag.get_all()]}
         return swag.get_all()
+
+    def post(self, namespace, item):
+        swag_opts = {
+            'swag.type': current_app.config.get('SWAG_BACKEND_TYPE', 'dynamodb'),
+            'swag.namespace': namespace
+        }
+        swag = SWAGManager(**parse_swag_config_options(swag_opts))
+        swag.update(item)
 
 
 api.add_resource(NameSpace, '/<namespace>')
