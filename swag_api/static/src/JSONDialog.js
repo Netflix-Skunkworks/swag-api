@@ -10,6 +10,7 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import ArrowBack from 'material-ui-icons/ArrowBack';
 import Slide from 'material-ui/transitions/Slide';
+import Tooltip from 'material-ui/Tooltip';
 
 
 import ReactJson from 'react-json-view';
@@ -62,9 +63,11 @@ class JSONDialog extends React.PureComponent {
 
         return (
             <div>
-                <IconButton onClick={this.handleOpen}>
-                    <Search/>
-                </IconButton>
+                <Tooltip title="JSON">
+                    <IconButton onClick={this.handleOpen}>
+                        <Search/>
+                    </IconButton>
+                </Tooltip>
                 <Dialog
                     fullScreen
                     open={this.state.open}
@@ -82,7 +85,7 @@ class JSONDialog extends React.PureComponent {
                     </AppBar>
                     <div className={classes.container}>
                         <div className={classes.content}>
-                            <ReactJson src={this.props.data}/>
+                            <ReactJson enableClipBoard={false} displayDataTypes={false} displayObjectSize={false} onEdit={true} src={this.props.data}/>
                         </div>
                     </div>
                 </Dialog>

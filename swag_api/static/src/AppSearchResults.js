@@ -1,7 +1,4 @@
 import React, {Component} from 'react';
-
-import {connect} from 'react-refetch';
-
 import {fuseConfig, FilterResults} from './AppSearch';
 
 import AccountCard from './AccountCard';
@@ -21,16 +18,16 @@ const prefilters = [
 ];
 
 
-class AppSearchResults extends Component {
+export default class AppSearchResults extends Component {
     render() {
-        const {resultFetch} = this.props;
-        if (resultFetch.pending) {
+        const {data} = this.props;
+        if (data.pending) {
             return <ResultLoader/>;
-        } else if (resultFetch.rejected) {
-            return <Error status={resultFetch.rejected}/>;
-        } else if (resultFetch.fulfilled) {
+        } else if (data.rejected) {
+            return <Error status={data.rejected}/>;
+        } else if (data.fulfilled) {
             return <FilterResults
-                items={resultFetch.value}
+                items={data.value}
                 fuseConfig={fuseConfig}
                 prefilters={prefilters}
             >
@@ -45,16 +42,3 @@ class AppSearchResults extends Component {
         }
     }
 }
-
-export default connect(props => {
-    const url = '/api/1/accounts';
-    return {
-        resultFetch: url,
-        refreshFetch: () => ({
-            resultFetch: {
-                url,
-                force: true,
-                refreshing: true
-            }
-        })
-    }})(AppSearchResults);

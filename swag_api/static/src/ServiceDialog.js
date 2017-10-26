@@ -10,6 +10,7 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import ArrowBack from 'material-ui-icons/ArrowBack';
 import Slide from 'material-ui/transitions/Slide';
+import Tooltip from 'material-ui/Tooltip';
 import ServiceCard from './ServiceCard';
 
 
@@ -60,9 +61,11 @@ class ServiceDialog extends React.PureComponent {
         const {classes} = this.props;
         return (
             <div>
-                <IconButton onClick={this.handleOpen}>
-                    <Computer/>
-                </IconButton>
+                <Tooltip title="Services">
+                    <IconButton onClick={this.handleOpen}>
+                        <Computer/>
+                    </IconButton>
+                </Tooltip>
                 <Dialog
                     fullScreen
                     open={this.state.open}
