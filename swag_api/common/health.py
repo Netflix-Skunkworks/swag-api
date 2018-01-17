@@ -7,16 +7,16 @@
 """
 from flask import Blueprint
 
+from swag_api.extensions import swag
+
 mod = Blueprint('healthCheck', __name__)
 
 
 @mod.route('/healthcheck')
 def health():
-    return 'ok'
+    healthy = swag.health_check()
 
-
-# TODO create dynamobased healthcheck
-def healthcheck(db):
-    with db.engine.connect() as connection:
-        connection.execute('SELECT 1;')
-    return True
+    if healthy:
+        return 'OK', 200
+    else:
+        return 'BAD', 500

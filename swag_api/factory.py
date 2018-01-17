@@ -17,7 +17,8 @@ from logging.handlers import RotatingFileHandler
 from flask import Flask
 
 from swag_api.common.health import mod as health
-from swag_api.extensions import sentry
+from swag_api.extensions import sentry, swag
+from swag_client.util import parse_swag_config_options
 
 DEFAULT_BLUEPRINTS = (
     health,
@@ -101,6 +102,12 @@ def configure_extensions(app):
     :param app:
     """
     sentry.init_app(app)
+
+    opts = {
+        'swag.type': app.config.get('SWAG_BACKEND_TYPE', 'dynamodb'),
+        'swag.namespace': app.config.get('SWAG_BACKEND_NAMESPACE', 'accounts')
+    }
+    swag.configure(**parse_swag_config_options(opts))
 
 
 def configure_blueprints(app, blueprints):

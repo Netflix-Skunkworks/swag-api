@@ -28,7 +28,7 @@ setup(
     install_requires=[
         'flask==0.12.2',
         'raven[flask]==6.1.0',
-        'swag_client>=0.2.6',
+        'swag_client>=0.3.3',
         'Flask-RESTful==0.3.6',
         'gunicorn==19.7.1'
     ],
