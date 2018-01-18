@@ -107,7 +107,7 @@ def configure_extensions(app):
         'swag.type': app.config.get('SWAG_BACKEND_TYPE', 'dynamodb'),
         'swag.namespace': app.config.get('SWAG_BACKEND_NAMESPACE', 'accounts')
     }
-    swag.configure(**parse_swag_config_options(opts))
+    swag.configure(**opts)
 
 
 def configure_blueprints(app, blueprints):
