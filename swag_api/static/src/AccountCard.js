@@ -8,7 +8,8 @@ import Collapse from 'material-ui/transitions/Collapse';
 import Avatar from 'material-ui/Avatar';
 import IconButton from 'material-ui/IconButton';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-
+import Tooltip from 'material-ui/Tooltip'
+import Search from 'material-ui-icons/Search';
 import List, {ListItem, ListItemText} from 'material-ui/List';
 import Table, {TableBody, TableCell, TableHead, TableRow} from 'material-ui/Table';
 
@@ -24,8 +25,6 @@ import SupervisorAccount from 'material-ui-icons/SupervisorAccount';
 import Check from 'material-ui-icons/Check';
 
 import CopyToClipboardButton from './CopyToClipboardButton';
-import ServiceDialog from './ServiceDialog';
-import JSONDialog from './JSONDialog';
 import Tabs, {Tab} from 'material-ui/Tabs';
 import green from 'material-ui/colors/green';
 import red from 'material-ui/colors/red';
@@ -113,7 +112,7 @@ class AccountCard extends Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
-            expanded: true,
+            expanded: false,
             value: 0
         };
 
@@ -132,7 +131,6 @@ class AccountCard extends Component {
     render() {
         const classes = this.props.classes;
         const {value} = this.state;
-
         return (
             <div>
                 <Card className={classes.card}>
@@ -246,8 +244,16 @@ class AccountCard extends Component {
                         </CardContent>
                     </Collapse>
                     <CardActions disableActionSpacing>
-                        <ServiceDialog services={this.props.account.services}/>
-                        <JSONDialog data={this.props.account}/>
+                        <Tooltip title="Services">
+                            <IconButton onClick={this.props.openDialog(this.props.account)}>
+                                <Computer/>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="JSON">
+                            <IconButton onClick={this.props.openJSON(this.props.account)}>
+                                <Search/>
+                            </IconButton>
+                        </Tooltip>
                         <div className={classes.flexGrow}/>
                         <IconButton
                             className={classnames(classes.expand, {
