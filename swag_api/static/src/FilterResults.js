@@ -44,11 +44,15 @@ export default function filterResultsFactory(store) {
         };
 
         state = {
-            search: null
+            search: undefined
         };
 
         componentDidMount() {
-            this.subscription = store.subscribe(search => this.setState({search}));
+            this.subscription = store.subscribe(search => {
+              if (this.state.search !== search) {
+                this.setState({search})
+              }
+            });
         }
 
         componentWillUnmount() {
