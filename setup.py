@@ -30,7 +30,8 @@ setup(
         'raven[flask]==6.1.0',
         'swag_client>=0.3.5',
         'Flask-RESTful==0.3.6',
-        'gunicorn==19.7.1'
+        'gunicorn==19.7.1',
+        'flask-cors==3.0.3'
     ],
     setup_requires=[
         'pytest-runner',
