@@ -15,6 +15,7 @@ from logging import Formatter, StreamHandler
 from logging.handlers import RotatingFileHandler
 
 from flask import Flask
+from flask_cors import CORS
 
 from swag_api.common.health import mod as health
 from swag_api.extensions import sentry, swag
@@ -49,6 +50,12 @@ def create_app(app_name=None, blueprints=None, config=None):
     configure_blueprints(app, blueprints)
     configure_extensions(app)
     configure_logging(app)
+    if app.config.get('CORS_ENABLED'):
+        cors_resources = app.config.get('CORS_RESOURCES')
+        if cors_resources:
+            CORS(app, resources=cors_resources)
+        else:
+            CORS(app)
     return app
 
 
