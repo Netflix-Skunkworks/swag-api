@@ -28,15 +28,8 @@ SWAG_API_BLUEPRINTS = (
 )
 
 
-from flask_gandalf.authz import FlaskGandalf
-
 def create_app(config=None):
     app = factory.create_app(app_name=__name__, blueprints=SWAG_API_BLUEPRINTS, config=None)
-    # app2 = FlaskGandalf(app)
-    # test = app2.get_app()
-    # return test
     return app
 
 cli = FlaskGroup(create_app=create_app)
-
-
