@@ -1,1 +1,3 @@
 graft swag_client/static
+include setup.py README.md MANIFEST.in LICENSE
+global-exclude *~
