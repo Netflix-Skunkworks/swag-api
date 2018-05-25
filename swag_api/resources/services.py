@@ -133,10 +133,8 @@ class AccountService(Resource):
         for service in account_data['services']:
             if service['name'] == service_name:
                 account_data['services'].remove(service)
-                try:
-                    swag.update(account_data)
-                except ValidationError as e:
-                    return e.messages, 400
+
+                swag.update(account_data)
 
                 return None, 204
 
@@ -146,6 +144,7 @@ class ToggleService(Resource):
 
     @api.expect(service_region_arguments)
     @api.response(204, 'Service status toggled')
+    @api.response(404, 'Account or Service not found')
     def post(self, namespace, account, service_name):
         """
         Toggle a service in a given account
@@ -165,14 +164,15 @@ class ToggleService(Resource):
         enabled = json_data['enabled']
         region = json_data.get('region', 'all')
 
+        if not isinstance(enabled, bool):
+            return {'enabled': 'Value of enabled must be True or False'}, 400
+
         swag.namespace = namespace
 
         account_data = get_account(account)
 
-        print(json_data)
-
         if not account_data:
-            not_found_response('account')
+            return not_found_response('account')
 
         for service in account_data['services']:
             if service['name'] == service_name:
@@ -182,9 +182,8 @@ class ToggleService(Resource):
                     elif status['region'] == region:
                         status['enabled'] = enabled
 
-                try:
-                    swag.update(account_data)
-                except ValidationError as e:
-                    return e.messages, 400
+                swag.update(account_data)
 
                 return None, 204
+
+        return not_found_response('service')
