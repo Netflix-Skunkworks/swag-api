@@ -50,6 +50,7 @@ def create_app(app_name=None, blueprints=None, config=None):
     configure_blueprints(app, blueprints)
     configure_extensions(app)
     configure_logging(app)
+
     if app.config.get('CORS_ENABLED'):
         cors_resources = app.config.get('CORS_RESOURCES')
         if cors_resources:
@@ -112,8 +113,10 @@ def configure_extensions(app):
 
     opts = {
         'swag.type': app.config.get('SWAG_BACKEND_TYPE', 'dynamodb'),
-        'swag.namespace': app.config.get('SWAG_BACKEND_NAMESPACE', 'accounts')
+        'swag.namespace': app.config.get('SWAG_BACKEND_NAMESPACE', 'accounts'),
+        'swag.schema_context': app.config.get('SWAG_SCHEMA_CONTEXT', {})
     }
+
     swag.configure(**parse_swag_config_options(opts))
 
 

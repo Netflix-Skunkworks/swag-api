@@ -5,29 +5,16 @@
     :license: Apache, see LICENSE for more details.
 .. moduleauthor:: Kevin Glisson <kglisson@netflix.com>
 """
-from flask import Blueprint, current_app, Request
-from flask_restful import reqparse, Api, Resource
-
-
-from swag_client.schemas import v2
-from swag_api.extensions import swag
+from flask import Blueprint
+from flask_restplus import Api
 
 mod = Blueprint('api', __name__)
-api = Api(mod)
+api = Api(mod,
+		  doc='/swagger/', title='SWAG',
+          description='A cloud account management system',
+          default='/api/1',
+          default_label='Operations on Accounts'
+         )
 
 
-class NameSpace(Resource):
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        super(NameSpace, self).__init__()
 
-    def get(self, namespace):
-        swag.namespace = namespace
-        return swag.get_all()
-
-    def post(self, namespace, item):
-        swag.namespace = namespace
-        swag.update(item)
-
-
-api.add_resource(NameSpace, '/<namespace>')
