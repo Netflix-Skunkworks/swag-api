@@ -26,18 +26,20 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'flask==0.12.2',
-        'raven[flask]==6.1.0',
+        'flask>=0.12.2',
+        'raven[flask]>=6.1.0',
         'swag_client>=0.3.5',
-        'Flask-RESTful==0.3.6',
-        'gunicorn==19.7.1',
-        'flask-cors==3.0.3'
+        'Flask-RESTful>=0.3.6',
+        'gunicorn>=19.7.1',
+        'flask-cors>=3.0.3'
     ],
     setup_requires=[
         'pytest-runner',
     ],
     tests_require=[
         'pytest',
+        'moto>=1.0.1',
+        'coveralls>=1.1'
     ],
     entry_points={
         'console_scripts': [

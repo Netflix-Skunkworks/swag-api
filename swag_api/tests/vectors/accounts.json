@@ -1,0 +1,126 @@
+[{
+    "aliases": ["test"],
+    "contacts": ["admins@test.net"],
+    "description": "LOL, Test account",
+    "email": "testaccount@test.net",
+    "environment": "test",
+    "id": "123456789101",
+    "name": "testaccount",
+    "owner": "netflix",
+    "provider": "gcp",
+    "sensitive": false,
+    "services": [
+        {
+            "name": "myService",
+            "metadata": {
+                "name": "testaccount"
+            },
+            "status": [
+                {
+                    "enabled": true,
+                    "region": "all"
+                }
+            ]
+        },
+        {
+            "name": "myService1",
+            "metadata": {},
+            "status": [
+                {
+                    "enabled": false,
+                    "region": "all"
+                }
+            ]
+        },
+        {
+            "name": "myService2",
+            "metadata": {},
+            "status": [
+                {
+                    "enabled": true,
+                    "region": "us-east-1"
+                }
+            ]
+        }
+    ],
+    "account_status": "ready"
+}, {
+    "aliases": ["test2"],
+    "contacts": ["admins@test2.net"],
+    "description": "LOL, Test account",
+    "email": "test2account@test.net",
+    "environment": "prod",
+    "id": "1234523233",
+    "name": "anothertestaccount2",
+    "owner": "netflix2",
+    "provider": "aws",
+    "sensitive": false,
+    "services": [
+        {
+            "name": "s3",
+            "metadata": {
+                "name": "testaccount2"
+            },
+            "status": [
+                {
+                    "enabled": true,
+                    "region": "all"
+                }
+            ]
+        },
+        {
+            "name": "cloudtrail",
+            "metadata": {
+                "kibanaUrl": "http://testaccount.cloudtrail.dashboard.net",
+                "esIndex": "cloudtrail_testaccount[yyyymm]"
+            },
+            "status": [
+                {
+                    "enabled": true,
+                    "region": "all"
+                }
+            ]
+        }
+    ],
+    "account_status": "deleted"
+},
+{
+    "aliases": ["test2"],
+    "contacts": ["admins@test2.net"],
+    "description": "LOL, Test account",
+    "email": "test2account@test.net",
+    "environment": "prod",
+    "id": "1212121212",
+    "name": "anothertestaccount3",
+    "owner": "netflix3",
+    "provider": "aws",
+    "sensitive": false,
+    "services": [
+        {
+            "name": "s3",
+            "metadata": {
+                "name": "testaccount2"
+            },
+            "status": [
+                {
+                    "enabled": true,
+                    "region": "all"
+                }
+            ]
+        },
+        {
+            "name": "cloudtrail",
+            "metadata": {
+                "kibanaUrl": "http://testaccount.cloudtrail.dashboard.net",
+                "esIndex": "cloudtrail_testaccount[yyyymm]"
+            },
+            "status": [
+                {
+                    "enabled": true,
+                    "region": "all"
+                }
+            ]
+        }
+    ],
+    "account_status": "ready"
+}]
