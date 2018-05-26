@@ -13,7 +13,8 @@ api = Api(mod,
 		  doc='/swagger/', title='SWAG',
           description='A cloud account management system',
           default='/api/1',
-          default_label='Operations on Accounts'
+          default_label='Operations on Accounts',
+          catch_all_404s=True
          )
 
 
