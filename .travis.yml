@@ -23,7 +23,7 @@ script:
   - coverage run -m py.test || exit 1
 
 after_success:
-  - coveralls
+  - codecov
 
 notifications:
   email:
