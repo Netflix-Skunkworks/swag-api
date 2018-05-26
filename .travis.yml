@@ -18,6 +18,7 @@ before_script:
   - python setup.py install_egg_info
   - pip install -e .
   - pip install .[tests]
+  - pip install codecov
 
 script:
   - coverage run -m py.test || exit 1
