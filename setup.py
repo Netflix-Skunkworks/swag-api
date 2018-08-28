@@ -27,24 +27,6 @@ with open(os.path.join(ROOT, 'swag_api', '__about__.py')) as f:
     exec(f.read(), about)  # nosec: about file is benign
 
 
-install_requires = [
-    'boto3<=1.7.79'
-    'flask>=0.12.2',
-    'raven[flask]>=6.1.0',
-    'swag_client>=0.3.5',
-    'flask-restplus>=0.11.0',
-    'gunicorn>=19.7.1',
-    'flask-cors>=3.0.3'
-]
-
-
-tests_require = [
-    'pytest>==3.0.6',
-    'moto>=1.0.1',
-    'coveralls>=1.1'
-]
-
-
 # Gather install requirements from requirements.txt
 install_reqs = parse_requirements('requirements.txt', session=PipSession())
 install_requires = [str(ir.req) for ir in install_reqs]
