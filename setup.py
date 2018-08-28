@@ -28,6 +28,7 @@ with open(os.path.join(ROOT, 'swag_api', '__about__.py')) as f:
 
 
 install_requires = [
+    'boto3<=1.7.79'
     'flask>=0.12.2',
     'raven[flask]>=6.1.0',
     'swag_client>=0.3.5',
