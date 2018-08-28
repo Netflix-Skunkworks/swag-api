@@ -136,6 +136,9 @@ def configure_logging(app):
     Sets up application wide logging.
     :param app:
     """
+    from flask.logging import default_handler
+    app.logger.removeHandler(default_handler)
+
     handler = RotatingFileHandler(app.config.get('LOG_FILE', 'swag_client.log'), maxBytes=10000000, backupCount=100)
 
     handler.setFormatter(Formatter(
@@ -147,9 +150,7 @@ def configure_logging(app):
     app.logger.setLevel(app.config.get('LOG_LEVEL', 'DEBUG'))
     app.logger.addHandler(handler)
 
-    stream_handler = StreamHandler()
-    stream_handler.setLevel(app.config.get('LOG_LEVEL', 'DEBUG'))
-    app.logger.addHandler(stream_handler)
-
-
-
+    if os.environ.get('ENABLE_STREAM_LOGGING', False):
+        stream_handler = StreamHandler()
+        stream_handler.setLevel(app.config.get('LOG_LEVEL', 'DEBUG'))
+        app.logger.addHandler(stream_handler)
