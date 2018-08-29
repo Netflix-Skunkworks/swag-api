@@ -1,10 +1,10 @@
-from flask import jsonify, request
+from flask import request
 from flask_restplus import reqparse, Resource
 
 from swag_api.api import api
 from swag_api.extensions import swag
 from swag_api.parsers import provider_arguments
-from swag_api.responses import not_found_response
+from swag_api.responses import not_found_response, jsonify
 
 
 @api.route('/<namespace>/provider/<provider>')

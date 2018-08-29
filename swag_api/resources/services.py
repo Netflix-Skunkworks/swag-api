@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import request
 from flask_restplus import reqparse, Resource
 from marshmallow.exceptions import ValidationError
 
@@ -6,7 +6,7 @@ from swag_api.api import api
 from swag_api.common.swag import get_account
 from swag_api.extensions import swag
 from swag_api.parsers import service_simple_arguments, service_account_arguments, service_region_arguments
-from swag_api.responses import not_found_response
+from swag_api.responses import not_found_response, jsonify
 
 
 @api.route('/<namespace>/service/<service>')
@@ -22,7 +22,7 @@ class Service(Resource):
 
         accounts = swag.get_service_enabled(service)
 
-        return accounts
+        return jsonify(accounts)
 
 
 @api.route('/<namespace>/service/<account>/<service_name>')
@@ -44,7 +44,7 @@ class AccountService(Resource):
 
         for service in account_data['services']:
             if service['name'] == service_name:
-                return service
+                return jsonify(service)
 
         return not_found_response('service')
 
