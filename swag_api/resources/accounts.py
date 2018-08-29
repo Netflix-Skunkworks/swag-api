@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import request
 from flask_restplus import reqparse, Resource
 from marshmallow.exceptions import ValidationError
 
@@ -6,7 +6,7 @@ from swag_api.api import api
 from swag_api.extensions import swag
 from swag_api.common.swag import get_account
 from swag_api.parsers import account_arguments, account_status_arguments, account_id_arguments
-from swag_api.responses import not_found_response
+from swag_api.responses import not_found_response, jsonify
 
 
 @api.route('/<namespace>/<account>')
@@ -26,7 +26,7 @@ class SingleAccount(Resource):
         if not account_data:
             return not_found_response('account')
         else:
-            return account_data
+            return jsonify(account_data)
 
     @api.expect(account_arguments)
     @api.response(204, 'Account successfully updated.')

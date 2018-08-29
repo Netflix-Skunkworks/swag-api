@@ -4,6 +4,7 @@ from swag_api.api import api
 from swag_api.extensions import swag
 from swag_api.common.swag import get_account
 from swag_api.parsers import namespace_arguments
+from swag_api.responses import jsonify
 
 
 @api.route('/<namespace>')
@@ -17,4 +18,4 @@ class NameSpace(Resource):
         Example: For a namespace `accounts`, a list of accounts will be returned based on [Account Schema](https://github.com/Netflix-Skunkworks/swag-client/blob/master/swag_client/schemas/v2.py#L43)
         """
         swag.namespace = namespace
-        return swag.get_all()
+        return jsonify(swag.get_all())
