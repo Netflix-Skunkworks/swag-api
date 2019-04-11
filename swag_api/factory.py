@@ -114,7 +114,8 @@ def configure_extensions(app):
     opts = {
         'swag.type': app.config.get('SWAG_BACKEND_TYPE', 'dynamodb'),
         'swag.namespace': app.config.get('SWAG_BACKEND_NAMESPACE', 'accounts'),
-        'swag.schema_context': app.config.get('SWAG_SCHEMA_CONTEXT', {})
+        'swag.schema_context': app.config.get('SWAG_SCHEMA_CONTEXT', {}),
+        'swag.cache_expires': app.config.get('SWAG_CACHE_EXPIRES', 600)
     }
 
     swag.configure(**parse_swag_config_options(opts))
