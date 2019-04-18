@@ -6,7 +6,6 @@
 .. moduleauthor:: Kevin Glisson <kglisson@netflix.com>
 """
 from flask import Blueprint
-
 from swag_api.extensions import swag
 
 mod = Blueprint('healthCheck', __name__)

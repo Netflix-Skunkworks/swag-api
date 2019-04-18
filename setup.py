@@ -8,7 +8,8 @@ Web interface for SWAG data.
 :license: Apache, see LICENSE for more details.
 """
 import os
-from setuptools import setup, find_packages
+
+from setuptools import find_packages, setup
 
 try:  # for pip >= 10
     from pip._internal.req import parse_requirements

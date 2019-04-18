@@ -1,3 +1,10 @@
+"""
+.. module: swag_api
+    :platform: Unix
+    :copyright: (c) 2019 by Netflix Inc., see AUTHORS for more
+    :license: Apache, see LICENSE for more details.
+.. moduleauthor:: Will Bengtson <wbengtson@netflix.com>
+"""
 import json
 import os
 
@@ -6,26 +13,17 @@ import pytest
 from moto import mock_dynamodb2
 
 
-@pytest.fixture(scope='function')
-def swag_app_client(dynamodb_table):
-    from swag_api import create_app
-
-    app = create_app(__name__)
-
-    return app.test_client()
-
-
-@pytest.fixture(scope='function')
-def swag_app_client_bad(bad_dynamodb_table):
-    from swag_api import create_app
-
-    app = create_app(__name__)
-
-    return app.test_client()
+@pytest.fixture
+def aws_credentials():
+    """Mocked AWS Credentials for moto."""
+    os.environ['AWS_ACCESS_KEY_ID'] = 'testing'
+    os.environ['AWS_SECRET_ACCESS_KEY'] = 'testing'
+    os.environ['AWS_SECURITY_TOKEN'] = 'testing'
+    os.environ['AWS_SESSION_TOKEN'] = 'testing'
 
 
 @pytest.yield_fixture(scope='function')
-def dynamodb_table():
+def dynamodb_table(aws_credentials):
     from swag_client.backend import SWAGManager
     from swag_client.util import parse_swag_config_options
     mock_dynamodb2().start()
@@ -70,10 +68,9 @@ def dynamodb_table():
     yield
     mock_dynamodb2().stop()
 
+
 @pytest.yield_fixture(scope='function')
-def bad_dynamodb_table():
-    from swag_client.backend import SWAGManager
-    from swag_client.util import parse_swag_config_options
+def bad_dynamodb_table(aws_credentials):
     mock_dynamodb2().start()
     resource = boto3.resource('dynamodb', region_name='us-east-1')
 
@@ -100,3 +97,21 @@ def bad_dynamodb_table():
 
     yield
     mock_dynamodb2().stop()
+
+
+@pytest.fixture(scope='function')
+def swag_app_client(dynamodb_table):
+    from swag_api import create_app
+
+    app = create_app(__name__)
+
+    return app.test_client()
+
+
+@pytest.fixture(scope='function')
+def swag_app_client_bad(bad_dynamodb_table):
+    from swag_api import create_app
+
+    app = create_app(__name__)
+
+    return app.test_client()

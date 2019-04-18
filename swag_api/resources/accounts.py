@@ -1,12 +1,18 @@
+"""
+.. module: swag_api.resources.accounts
+    :platform: Unix
+    :copyright: (c) 2019 by Netflix Inc., see AUTHORS for more
+    :license: Apache, see LICENSE for more details.
+.. moduleauthor:: Will Bengtson <wbengtson@netflix.com>
+"""
 from flask import request
-from flask_restplus import reqparse, Resource
+from flask_restplus import Resource
 from marshmallow.exceptions import ValidationError
-
 from swag_api.api import api
 from swag_api.extensions import swag
 from swag_api.common.swag import get_account
-from swag_api.parsers import account_arguments, account_status_arguments, account_id_arguments
-from swag_api.responses import not_found_response, jsonify
+from swag_api.parsers import account_arguments, account_id_arguments, account_status_arguments
+from swag_api.responses import jsonify, not_found_response
 
 
 @api.route('/<namespace>/<account>')
@@ -20,7 +26,6 @@ class SingleAccount(Resource):
         Returns an account given a name or account ID.
         """
         swag.namespace = namespace
-
         account_data = get_account(account)
 
         if not account_data:
@@ -40,8 +45,8 @@ class SingleAccount(Resource):
         * Specify the ID or name of the account in the request URL path.
         """
         swag.namespace = namespace
-
         json_data = request.get_json(force=True)
+
         try:
             swag.update(json_data)
         except ValidationError as e:
@@ -61,8 +66,8 @@ class SingleAccount(Resource):
         * Specify the ID of the account in the request URL path.
         """
         swag.namespace = namespace
-
         json_data = request.get_json(force=True)
+
         try:
             swag.create(json_data)
         except ValidationError as e:
@@ -81,7 +86,6 @@ class AccountStatus(Resource):
         Returns a list of accounts with the given account_status
         """
         swag.namespace = namespace
-
         account_data = swag.get_all("[?account_status=='{}']".format(account_status))
 
         if len(account_data) == 0:

@@ -120,3 +120,4 @@ yarn-debug.log*
 yarn-error.log*
 
 .pytest_cache
+test-reports/

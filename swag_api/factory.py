@@ -10,13 +10,11 @@
 import os
 import types
 import errno
-
 from logging import Formatter, StreamHandler
 from logging.handlers import RotatingFileHandler
 
 from flask import Flask
 from flask_cors import CORS
-
 from swag_api.common.health import mod as health
 from swag_api.extensions import sentry, swag
 from swag_client.util import parse_swag_config_options
@@ -25,11 +23,10 @@ DEFAULT_BLUEPRINTS = (
     health,
 )
 
-
 API_VERSION = 1
 
 
-def create_app(app_name=None, blueprints=None, config=None):
+def create_app(app_name: str = None, blueprints: list = None, config: str = None) -> Flask:
     """
     swag_api application factory
     :param config:
@@ -60,7 +57,7 @@ def create_app(app_name=None, blueprints=None, config=None):
     return app
 
 
-def from_file(file_path, silent=False):
+def from_file(file_path: str, silent: bool = False):
     """
     Updates the values in the config from a Python file.  This function
     behaves as if the file was imported as module with the
@@ -81,7 +78,7 @@ def from_file(file_path, silent=False):
     return d
 
 
-def configure_app(app, config=None):
+def configure_app(app: Flask, config: str = None):
     """
     Different ways of configuration
     :param app:
@@ -103,7 +100,7 @@ def configure_app(app, config=None):
                 app.config.from_object(from_file(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'default.conf.py')))
 
 
-def configure_extensions(app):
+def configure_extensions(app: Flask):
     """
     Attaches and configures any needed flask extensions
     to our app.
@@ -120,7 +117,7 @@ def configure_extensions(app):
     swag.configure(**parse_swag_config_options(opts))
 
 
-def configure_blueprints(app, blueprints):
+def configure_blueprints(app: Flask, blueprints: list):
     """
     We prefix our APIs with their given version so that we can support
     multiple concurrent API versions.
@@ -131,7 +128,7 @@ def configure_blueprints(app, blueprints):
         app.register_blueprint(blueprint, url_prefix="/api/{0}".format(API_VERSION))
 
 
-def configure_logging(app):
+def configure_logging(app: Flask):
     """
     Sets up application wide logging.
     :param app:
