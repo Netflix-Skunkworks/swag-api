@@ -1,10 +1,11 @@
+"""
+.. module: swag_api.extensions
+    :copyright: (c) 2019 by Netflix Inc., see AUTHORS for more
+    :license: Apache, see LICENSE for more details.
+.. moduleauthor:: Will Bengtson <wbengtson@netflix.com>
+"""
 import json
 import logging
-import time
-import unittest
-
-import pytest
-
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -35,6 +36,7 @@ def test_api_1_accounts_single_name_get(swag_app_client):
 
     assert response.status_code == 200
     assert isinstance(response.get_json(), dict)
+
 
 def test_api_1_accounts_single_id_get(swag_app_client):
     response = swag_app_client.get('/api/1/accounts/123456789101')
@@ -285,11 +287,10 @@ def test_api_1_account_service_toggle_post(swag_app_client):
 
     response = swag_app_client.get('/api/1/accounts/service/testaccount/myService')
 
-    assert response.get_json()['status'][0]['enabled'] == False
+    assert not response.get_json()['status'][0]['enabled']
 
 
 def test_api_1_account_service_toggle_region_post(swag_app_client):
-
     toggle_dict = {
         'enabled': False,
         'region': 'us-east-1'
@@ -306,7 +307,6 @@ def test_api_1_account_service_toggle_region_post(swag_app_client):
 
 
 def test_api_1_account_service_toggle_invalid_json_post(swag_app_client):
-
     toggle_dict = {
         'enabled': 'False'
     }
@@ -322,7 +322,6 @@ def test_api_1_account_service_toggle_invalid_json_post(swag_app_client):
 
 
 def test_api_1_account_service_toggle_service_not_found_post(swag_app_client):
-
     toggle_dict = {
         'enabled': False
     }
@@ -338,7 +337,6 @@ def test_api_1_account_service_toggle_service_not_found_post(swag_app_client):
 
 
 def test_api_1_account_service_toggle_account_not_found_post(swag_app_client):
-
     toggle_dict = {
         'enabled': False
     }
@@ -369,7 +367,6 @@ def test_api_1_account_service_delete(swag_app_client):
 
 
 def test_api_1_account_service_account_not_found_delete(swag_app_client):
-
     response = swag_app_client.delete('/api/1/accounts/service/idonotexist/myService')
 
     assert response.status_code == 404
@@ -405,6 +402,7 @@ def test_api_1_account_service_add_valid_schema_put(swag_app_client):
     assert response.status_code == 200
     assert response.get_json()['name'] == 'myNewService'
 
+
 def test_api_1_account_service_add_invalid_schema_put(swag_app_client):
     response = swag_app_client.get('/api/1/accounts/service/testaccount/myNewService')
 
@@ -431,7 +429,6 @@ def test_api_1_account_service_add_invalid_schema_put(swag_app_client):
 
 
 def test_api_1_account_service_add_valid_schema_invalid_account_put(swag_app_client):
-
     netflix_service = {
         'name': 'myNewService',
         'status': [{
@@ -454,7 +451,6 @@ def test_api_1_account_service_add_valid_schema_invalid_account_put(swag_app_cli
 
 
 def test_api_1_account_service_add_service_exists_put(swag_app_client):
-
     netflix_service = {
         'name': 'myService',
         'status': [{
@@ -473,7 +469,7 @@ def test_api_1_account_service_add_service_exists_put(swag_app_client):
     )
 
     assert response.status_code == 400
-    assert response.get_json() == { 'service': 'Service already exists' }
+    assert response.get_json() == {'service': 'Service already exists'}
 
 
 def test_api_1_account_service_updated_valid_schema_post(swag_app_client):
@@ -506,6 +502,7 @@ def test_api_1_account_service_updated_valid_schema_post(swag_app_client):
     assert response.status_code == 200
     assert response.get_json()['metadata']['updated'] == 'yesterday'
 
+
 def test_api_1_account_service_updated_invalid_schema_post(swag_app_client):
     response = swag_app_client.get('/api/1/accounts/service/testaccount/myService')
 
@@ -533,7 +530,6 @@ def test_api_1_account_service_updated_invalid_schema_post(swag_app_client):
 
 
 def test_api_1_account_service_updated_valid_schema_invalid_account_post(swag_app_client):
-
     netflix_service = {
         'name': 'myNewService',
         'status': [{
@@ -556,7 +552,6 @@ def test_api_1_account_service_updated_valid_schema_invalid_account_post(swag_ap
 
 
 def test_api_1_account_service_updated_service_not_found_post(swag_app_client):
-
     netflix_service = {
         'name': 'notRealService',
         'status': [{

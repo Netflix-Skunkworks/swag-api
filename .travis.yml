@@ -1,8 +1,10 @@
 language: python
+dist: xenial
 
-matrix:
-  include:
-    - python: "3.6"
+python: 3.7
+
+before_install:
+  - sudo rm -f /etc/boto.cfg
 
 cache:
   directories:
@@ -12,20 +14,20 @@ env:
   global:
     - PIP_DOWNLOAD_CACHE=".pip_download_cache"
 
+install:
+  - pip install tox-travis
+
+matrix:
+  include:
+    - env:
+    - env: TOXENV=linters
+
 before_script:
-  - pip install --upgrade pip
-  - pip install --upgrade setuptools
-  - python setup.py install_egg_info
-  - pip install -e .
-  - pip install .[tests]
   - pip install codecov
 
 script:
-  - coverage run -m py.test || exit 1
+  # - coverage run -m py.test || exit 1
+  - tox
 
 after_success:
   - codecov
-
-notifications:
-  email:
-    - secops@netflix.com

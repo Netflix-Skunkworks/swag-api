@@ -1,12 +1,18 @@
+"""
+.. module: swag_api.resources.services
+    :platform: Unix
+    :copyright: (c) 2019 by Netflix Inc., see AUTHORS for more
+    :license: Apache, see LICENSE for more details.
+.. moduleauthor:: Will Bengtson <wbengtson@netflix.com>
+"""
 from flask import request
-from flask_restplus import reqparse, Resource
+from flask_restplus import Resource
 from marshmallow.exceptions import ValidationError
-
 from swag_api.api import api
 from swag_api.common.swag import get_account
 from swag_api.extensions import swag
-from swag_api.parsers import service_simple_arguments, service_account_arguments, service_region_arguments
-from swag_api.responses import not_found_response, jsonify
+from swag_api.parsers import service_account_arguments, service_region_arguments, service_simple_arguments
+from swag_api.responses import jsonify, not_found_response
 
 
 @api.route('/<namespace>/service/<service>')
@@ -19,7 +25,6 @@ class Service(Resource):
         Returns a list of accounts with the given service.
         """
         swag.namespace = namespace
-
         accounts = swag.get_service_enabled(service)
 
         return jsonify(accounts)
@@ -36,7 +41,6 @@ class AccountService(Resource):
         Returns the service json for a given account and service name
         """
         swag.namespace = namespace
-
         account_data = get_account(account)
 
         if not account_data:
@@ -105,7 +109,7 @@ class AccountService(Resource):
 
         for service in account_data['services']:
             if service['name'] == service_name:
-                return { 'service': 'Service already exists' }, 400
+                return {'service': 'Service already exists'}, 400
 
         account_data['services'].append(json_data)
         try:
@@ -158,8 +162,7 @@ class ToggleService(Resource):
         ```
         * Specify the account ID/name and service name in the request URL path.
         """
-
-        args = service_region_arguments.parse_args(request)
+        service_region_arguments.parse_args(request)
         json_data = request.get_json(force=True)
         enabled = json_data['enabled']
         region = json_data.get('region', 'all')
@@ -168,7 +171,6 @@ class ToggleService(Resource):
             return {'enabled': 'Value of enabled must be True or False'}, 400
 
         swag.namespace = namespace
-
         account_data = get_account(account)
 
         if not account_data:

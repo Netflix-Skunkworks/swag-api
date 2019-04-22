@@ -1,8 +1,13 @@
-from flask_restplus import reqparse, Resource
-
+"""
+.. module: swag_api.resources.namespace
+    :platform: Unix
+    :copyright: (c) 2019 by Netflix Inc., see AUTHORS for more
+    :license: Apache, see LICENSE for more details.
+.. moduleauthor:: Will Bengtson <wbengtson@netflix.com>
+"""
+from flask_restplus import Resource
 from swag_api.api import api
 from swag_api.extensions import swag
-from swag_api.common.swag import get_account
 from swag_api.parsers import namespace_arguments
 from swag_api.responses import jsonify
 

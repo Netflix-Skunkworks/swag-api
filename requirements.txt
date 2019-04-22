@@ -1,7 +1,7 @@
-boto3<=1.7.79
+boto3>=1.9.131
 flask>=0.12.2
 raven[flask]>=6.1.0
-swag_client>=0.4.6
+swag_client>=0.4.7
 flask-restplus>=0.11.0
 gunicorn>=19.7.1
 flask-cors>=3.0.3

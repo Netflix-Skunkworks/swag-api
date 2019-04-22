@@ -1,7 +1,14 @@
+"""
+.. module: swag_api.common.swag
+    :platform: Unix
+    :copyright: (c) 2019 by Netflix Inc., see AUTHORS for more
+    :license: Apache, see LICENSE for more details.
+.. moduleauthor:: Will Bengtson <wbengtson@netflix.com>
+"""
 from swag_api.extensions import swag
 
 
-def get_account(account):
+def get_account(account: str) -> dict:
     account_data = swag.get("[?id=='{}']".format(account))
 
     if not account_data:

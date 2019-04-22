@@ -10,12 +10,8 @@ from flask_restplus import Api
 
 mod = Blueprint('api', __name__)
 api = Api(mod,
-		  doc='/swagger/', title='SWAG',
+          doc='/swagger/', title='SWAG',
           description='A cloud account management system',
           default='/api/1',
           default_label='Operations on Accounts',
-          catch_all_404s=True
-         )
-
-
-
+          catch_all_404s=True)
