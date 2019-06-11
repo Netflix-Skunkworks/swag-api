@@ -4,8 +4,11 @@
     :copyright: (c) 2019 by Netflix Inc., see AUTHORS for more
     :license: Apache, see LICENSE for more details.
 .. moduleauthor:: Will Bengtson <wbengtson@netflix.com>
+.. moduleauthor:: Mike Grima <mgrima@netflix.com>
 """
-from flask import request
+from typing import Callable
+
+from flask import g, request, Response
 from flask_restplus import Resource
 from marshmallow.exceptions import ValidationError
 from swag_api.api import api
@@ -15,8 +18,23 @@ from swag_api.parsers import account_arguments, account_id_arguments, account_st
 from swag_api.responses import jsonify, not_found_response
 
 
+def basic_metrics(func) -> Callable:
+    """Common metric tags that are used by the services endpoints"""
+    def wrapper(*args, **kwargs) -> Response:
+        g.metric_tags = {
+            'method': request.method.lower(),
+            'service': 'accounts'
+        }
+
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
 @api.route('/<namespace>/<account>')
 class SingleAccount(Resource):
+
+    method_decorators = [basic_metrics]
 
     @api.expect(account_arguments)
     @api.response(404, 'Account not found')
@@ -25,6 +43,7 @@ class SingleAccount(Resource):
         """
         Returns an account given a name or account ID.
         """
+        g.metric_tags.update({'endpoint': 'accounts.get_single_account'})
         swag.namespace = namespace
         account_data = get_account(account)
 
@@ -44,6 +63,7 @@ class SingleAccount(Resource):
         [Account Schema](https://github.com/Netflix-Skunkworks/swag-client/blob/master/swag_client/schemas/v2.py#L43)
         * Specify the ID or name of the account in the request URL path.
         """
+        g.metric_tags.update({'endpoint': 'accounts.update_account'})
         swag.namespace = namespace
         json_data = request.get_json(force=True)
 
@@ -65,6 +85,7 @@ class SingleAccount(Resource):
         [Account Schema](https://github.com/Netflix-Skunkworks/swag-client/blob/master/swag_client/schemas/v2.py#L43)
         * Specify the ID of the account in the request URL path.
         """
+        g.metric_tags.update({'endpoint': 'accounts.add_new_account'})
         swag.namespace = namespace
         json_data = request.get_json(force=True)
 
@@ -79,12 +100,15 @@ class SingleAccount(Resource):
 @api.route('/<namespace>/account_status/<account_status>')
 class AccountStatus(Resource):
 
+    method_decorators = [basic_metrics]
+
     @api.expect(account_status_arguments)
-    @api.response(200, 'Account with account_status found')
+    @api.response(200, 'Accounts with the account_status')
     def get(self, namespace, account_status):
         """
         Returns a list of accounts with the given account_status
         """
+        g.metric_tags.update({'endpoint': 'accounts.get_accounts_with_status'})
         swag.namespace = namespace
         account_data = swag.get_all("[?account_status=='{}']".format(account_status))
 

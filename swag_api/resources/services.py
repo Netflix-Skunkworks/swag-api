@@ -4,8 +4,11 @@
     :copyright: (c) 2019 by Netflix Inc., see AUTHORS for more
     :license: Apache, see LICENSE for more details.
 .. moduleauthor:: Will Bengtson <wbengtson@netflix.com>
+.. moduleauthor:: Mike Grima <mgrima@netflix.com>
 """
-from flask import request
+from typing import Callable
+
+from flask import g, request, Response
 from flask_restplus import Resource
 from marshmallow.exceptions import ValidationError
 from swag_api.api import api
@@ -15,8 +18,23 @@ from swag_api.parsers import service_account_arguments, service_region_arguments
 from swag_api.responses import jsonify, not_found_response
 
 
+def basic_metrics(func) -> Callable:
+    """Common metric tags that are used by the services endpoints"""
+    def wrapper(*args, **kwargs) -> Response:
+        g.metric_tags = {
+            'method': request.method.lower(),
+            'service': 'service'
+        }
+
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
 @api.route('/<namespace>/service/<service>')
 class Service(Resource):
+
+    method_decorators = [basic_metrics]
 
     @api.expect(service_simple_arguments)
     @api.response(200, 'List of accounts with service')
@@ -24,6 +42,7 @@ class Service(Resource):
         """
         Returns a list of accounts with the given service.
         """
+        g.metric_tags.update({'endpoint': 'service.all_accounts_with_service'})
         swag.namespace = namespace
         accounts = swag.get_service_enabled(service)
 
@@ -33,6 +52,8 @@ class Service(Resource):
 @api.route('/<namespace>/service/<account>/<service_name>')
 class AccountService(Resource):
 
+    method_decorators = [basic_metrics]
+
     @api.expect(service_account_arguments)
     @api.response(404, 'Service not found in account')
     @api.response(200, 'Service found in account')
@@ -40,6 +61,7 @@ class AccountService(Resource):
         """
         Returns the service json for a given account and service name
         """
+        g.metric_tags.update({'endpoint': 'service.get_service_for_account'})
         swag.namespace = namespace
         account_data = get_account(account)
 
@@ -64,6 +86,7 @@ class AccountService(Resource):
         [Service Schema](https://github.com/Netflix-Skunkworks/swag-client/blob/master/swag_client/schemas/v2.py#L36)
         * Specify the account ID/name and service name in the request URL path.
         """
+        g.metric_tags.update({'endpoint': 'service.update_service_for_account'})
         json_data = request.get_json(force=True)
 
         swag.namespace = namespace
@@ -99,6 +122,7 @@ class AccountService(Resource):
         [Service Schema](https://github.com/Netflix-Skunkworks/swag-client/blob/master/swag_client/schemas/v2.py#L36)
         * Specify the account ID/name and service name in the request URL path.
         """
+        g.metric_tags.update({'endpoint': 'service.add_service_for_account'})
         json_data = request.get_json(force=True)
 
         swag.namespace = namespace
@@ -126,7 +150,7 @@ class AccountService(Resource):
         """
         Delete the service from the given account
         """
-        # json_data = request.get_json(force=True)
+        g.metric_tags.update({'endpoint': 'service.delete_service_from_account'})
 
         swag.namespace = namespace
         account_data = get_account(account)
@@ -142,9 +166,13 @@ class AccountService(Resource):
 
                 return None, 204
 
+        return not_found_response('service')
+
 
 @api.route('/<namespace>/service/<account>/<service_name>/toggle')
 class ToggleService(Resource):
+
+    method_decorators = [basic_metrics]
 
     @api.expect(service_region_arguments)
     @api.response(204, 'Service status toggled')
@@ -162,6 +190,7 @@ class ToggleService(Resource):
         ```
         * Specify the account ID/name and service name in the request URL path.
         """
+        g.metric_tags.update({'endpoint': 'service.toggle_service_for_account'})
         service_region_arguments.parse_args(request)
         json_data = request.get_json(force=True)
         enabled = json_data['enabled']

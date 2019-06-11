@@ -3,20 +3,26 @@
     :platform: Unix
     :synopsis: This module contains all the needed functions to allow
     the factory app creation.
-    :copyright: (c) 2017 by Netflix Inc., see AUTHORS for more
+    :copyright: (c) 2019 by Netflix Inc., see AUTHORS for more
     :license: Apache, see LICENSE for more details.
 .. moduleauthor:: Kevin Glisson <kglisson@netflix.com>
+.. moduleauthor:: Mike Grima <mgrima@netflix.com>
 """
 import os
+import time
 import types
 import errno
+import importlib
+import pkgutil
 from logging import Formatter, StreamHandler
 from logging.handlers import RotatingFileHandler
 
-from flask import Flask
+from flask import Flask, g
 from flask_cors import CORS
 from swag_api.common.health import mod as health
 from swag_api.extensions import sentry, swag
+import swag_api.plugins.metrics
+from swag_api.plugins.metrics import InvalidPluginClassException, InvalidPluginConfigurationException, MetricsPlugin
 from swag_client.util import parse_swag_config_options
 
 DEFAULT_BLUEPRINTS = (
@@ -47,6 +53,7 @@ def create_app(app_name: str = None, blueprints: list = None, config: str = None
     configure_blueprints(app, blueprints)
     configure_extensions(app)
     configure_logging(app)
+    configure_metrics(app)
 
     if app.config.get('CORS_ENABLED'):
         cors_resources = app.config.get('CORS_RESOURCES')
@@ -152,3 +159,65 @@ def configure_logging(app: Flask):
         stream_handler = StreamHandler()
         stream_handler.setLevel(app.config.get('LOG_LEVEL', 'DEBUG'))
         app.logger.addHandler(stream_handler)
+
+
+def configure_metrics(app: Flask):
+    """
+    Sets up metrics plugins if applicable. Also registers a before_request and after_request handlers for
+    collecting metrics on the total time required to process the request as well as other items collected
+    during the execution of the API call.
+
+    :param app:
+    """
+    app.logger.info(f'Configuring metrics plugins...')
+    metrics_plugins = {}
+    for finder, name, ispkg in pkgutil.iter_modules(swag_api.plugins.metrics.__path__,
+                                                    swag_api.plugins.metrics.__name__ + "."):
+        if not app.config.get('ENABLE_SAMPLE_METRICS_PLUGIN', False) and name == 'swag_api.plugins.metrics.sample':
+            continue
+
+        # Verify that the MetricsPlugin is defined, and is a sub-class of MetricsPlugin:
+        module = importlib.import_module(name)
+        if not hasattr(module, 'MetricsPlugin'):
+            raise InvalidPluginConfigurationException(
+                {
+                    'message': f"The {name} plugin needs to have an __init__.py import a plugin named as 'MetricsPlugin'."
+                })
+
+        if not issubclass(module.MetricsPlugin, MetricsPlugin):
+            raise InvalidPluginClassException(
+                {
+                    'message':
+                    f"The {name} plugin needs to have a 'MetricsPlugin' that is a sub-class of 'swag_api.plugins.MetricsPlugin'."
+                })
+
+        app.logger.info(f'Registering and instantiating metrics plugin: {name}.')
+        metrics_plugins[name] = module.MetricsPlugin(app)
+
+    app.metrics_plugins = metrics_plugins
+
+    @app.before_request
+    def request_start_time():
+        """
+        Gets the start time of the request for calculating the total time it takes to process the given request
+        for metrics collection.
+        """
+        g.start = time.time()
+
+    @app.after_request
+    def after_request_metrics(response):
+        for metric, plugin in app.metrics_plugins.items():
+            try:
+                g.metric_tags['status_code'] = response.status_code
+                app.logger.debug(f'Sending metrics for the return code to the {metric} plugin...')
+                plugin.send_counter_metric('swag_api.request', tags=g.metric_tags)
+
+                app.logger.debug(f'Sending metrics for request time to the {metric} plugin...')
+                plugin.send_latency_metric('swag_api.request_latency', time.time() - g.start, tags=g.metric_tags)
+            except Exception as e:
+                app.logger.error(f'Encountered error posting metrics to the {metric} plugin.')
+                app.logger.exception(e)
+
+        return response
+
+    app.logger.info(f'Completed configuration of metrics plugins.')
