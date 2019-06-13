@@ -25,7 +25,7 @@ def test_api_1_healthcheck_good_get(swag_app_client, mocked_metrics):
     mocked_metrics.update({
         'method': 'get',
         'service': 'healthcheck',
-        'status_code': 200
+        'status_code': '200'
     })
 
 
@@ -39,7 +39,7 @@ def test_api_1_healthcheck_bad_get(bad_swag_app, swag_app_client_bad):
     mocked_metrics = {
         'method': 'get',
         'service': 'healthcheck',
-        'status_code': 500
+        'status_code': '500'
     }
     metrics_tests(counter_metric, latency_metric, mocked_metrics)
 
@@ -55,7 +55,7 @@ def test_api_1_namespace_get(swag_app_client, mocked_metrics):
         'method': 'get',
         'service': 'namespace',
         'endpoint': 'namespace.list_all',
-        'status_code': 200
+        'status_code': '200'
     })
 
 
@@ -70,7 +70,7 @@ def test_api_1_accounts_single_name_get(swag_app_client, mocked_metrics):
         'method': 'get',
         'service': 'accounts',
         'endpoint': 'accounts.get_single_account',
-        'status_code': 200
+        'status_code': '200'
     })
 
 
@@ -85,7 +85,7 @@ def test_api_1_accounts_single_id_get(swag_app_client, mocked_metrics):
         'method': 'get',
         'service': 'accounts',
         'endpoint': 'accounts.get_single_account',
-        'status_code': 200
+        'status_code': '200'
     })
 
 
@@ -100,7 +100,7 @@ def test_api_1_accounts_single_name_not_found_get(swag_app_client, mocked_metric
         'method': 'get',
         'service': 'accounts',
         'endpoint': 'accounts.get_single_account',
-        'status_code': 404
+        'status_code': '404'
     })
 
 
@@ -115,7 +115,7 @@ def test_api_1_accounts_single_id_not_found_get(swag_app_client, mocked_metrics)
         'method': 'get',
         'service': 'accounts',
         'endpoint': 'accounts.get_single_account',
-        'status_code': 404
+        'status_code': '404'
     })
 
 
@@ -146,7 +146,7 @@ def test_api_1_accounts_create_valid_schema_put(swag_app, swag_app_client):
         'method': 'put',
         'service': 'accounts',
         'endpoint': 'accounts.add_new_account',
-        'status_code': 204
+        'status_code': '204'
     }
     metrics_tests(counter_metric, latency_metric, mocked_metrics)
 
@@ -181,7 +181,7 @@ def test_api_1_accounts_create_invalid_schema_put(swag_app_client, mocked_metric
         'method': 'put',
         'service': 'accounts',
         'endpoint': 'accounts.add_new_account',
-        'status_code': 400
+        'status_code': '400'
     })
 
 
@@ -218,7 +218,7 @@ def test_api_1_accounts_update_valid_schema_post(swag_app, swag_app_client):
         'method': 'post',
         'service': 'accounts',
         'endpoint': 'accounts.update_account',
-        'status_code': 204
+        'status_code': '204'
     }
     metrics_tests(counter_metric, latency_metric, mocked_metrics)
 
@@ -260,7 +260,7 @@ def test_api_1_accounts_update_invalid_schema_put(swag_app, swag_app_client):
         'method': 'post',
         'service': 'accounts',
         'endpoint': 'accounts.update_account',
-        'status_code': 400
+        'status_code': '400'
     }
     metrics_tests(counter_metric, latency_metric, mocked_metrics)
 
@@ -277,7 +277,7 @@ def test_api_1_service_get(swag_app_client, mocked_metrics):
         'method': 'get',
         'service': 'service',
         'endpoint': 'service.all_accounts_with_service',
-        'status_code': 200
+        'status_code': '200'
     })
 
 
@@ -294,7 +294,7 @@ def test_api_1_account_service_get(swag_app_client, mocked_metrics):
         'method': 'get',
         'service': 'service',
         'endpoint': 'service.get_service_for_account',
-        'status_code': 200
+        'status_code': '200'
     })
 
 
@@ -310,7 +310,7 @@ def test_api_1_account_service_no_account_found_get(swag_app_client, mocked_metr
         'method': 'get',
         'service': 'service',
         'endpoint': 'service.get_service_for_account',
-        'status_code': 404
+        'status_code': '404'
     })
 
 
@@ -325,7 +325,7 @@ def test_api_1_environment_get(swag_app_client, env, length, mocked_metrics):
         'method': 'get',
         'service': 'environment',
         'endpoint': 'environment.list_accounts_in_environment',
-        'status_code': 200
+        'status_code': '200'
     })
 
 
@@ -341,7 +341,7 @@ def test_api_1_owner_get(swag_app_client, owner, length, mocked_metrics):
         'method': 'get',
         'service': 'owner',
         'endpoint': 'owner.list_accounts_with_owner',
-        'status_code': 200
+        'status_code': '200'
     })
 
 
@@ -357,7 +357,7 @@ def test_api_1_provider_get(swag_app_client, provider, length, mocked_metrics):
         'method': 'get',
         'service': 'provider',
         'endpoint': 'provider.list_accounts_on_provider',
-        'status_code': 200
+        'status_code': '200'
     })
 
 
@@ -373,7 +373,7 @@ def test_api_1_account_status_get(swag_app_client, status, length, mocked_metric
         'method': 'get',
         'service': 'accounts',
         'endpoint': 'accounts.get_accounts_with_status',
-        'status_code': 200
+        'status_code': '200'
     })
 
 
@@ -395,7 +395,7 @@ def test_api_1_account_service_toggle_post(swag_app, swag_app_client):
         'method': 'post',
         'service': 'service',
         'endpoint': 'service.toggle_service_for_account',
-        'status_code': 204
+        'status_code': '204'
     }
     metrics_tests(counter_metric, latency_metric, mocked_metrics)
 
@@ -421,7 +421,7 @@ def test_api_1_account_service_toggle_region_post(swag_app_client, mocked_metric
         'method': 'post',
         'service': 'service',
         'endpoint': 'service.toggle_service_for_account',
-        'status_code': 204
+        'status_code': '204'
     })
 
 
@@ -444,7 +444,7 @@ def test_api_1_account_service_toggle_invalid_json_post(swag_app_client, mocked_
         'method': 'post',
         'service': 'service',
         'endpoint': 'service.toggle_service_for_account',
-        'status_code': 400
+        'status_code': '400'
     })
 
 
@@ -467,7 +467,7 @@ def test_api_1_account_service_toggle_service_not_found_post(swag_app_client, mo
         'method': 'post',
         'service': 'service',
         'endpoint': 'service.toggle_service_for_account',
-        'status_code': 404
+        'status_code': '404'
     })
 
 
@@ -490,7 +490,7 @@ def test_api_1_account_service_toggle_account_not_found_post(swag_app_client, mo
         'method': 'post',
         'service': 'service',
         'endpoint': 'service.toggle_service_for_account',
-        'status_code': 404
+        'status_code': '404'
     })
 
 
@@ -506,7 +506,7 @@ def test_api_1_account_service_delete(swag_app, swag_app_client):
         'method': 'delete',
         'service': 'service',
         'endpoint': 'service.delete_service_from_account',
-        'status_code': 204
+        'status_code': '204'
     }
     metrics_tests(counter_metric, latency_metric, mocked_metrics)
 
@@ -526,7 +526,7 @@ def test_api_1_account_service_account_not_found_delete(swag_app_client, mocked_
         'method': 'delete',
         'service': 'service',
         'endpoint': 'service.delete_service_from_account',
-        'status_code': 404
+        'status_code': '404'
     })
 
 
@@ -557,7 +557,7 @@ def test_api_1_account_service_add_valid_schema_put(swag_app, swag_app_client):
         'method': 'put',
         'service': 'service',
         'endpoint': 'service.add_service_for_account',
-        'status_code': 204
+        'status_code': '204'
     }
     metrics_tests(counter_metric, latency_metric, mocked_metrics)
 
@@ -594,7 +594,7 @@ def test_api_1_account_service_add_invalid_schema_put(swag_app, swag_app_client)
         'method': 'put',
         'service': 'service',
         'endpoint': 'service.add_service_for_account',
-        'status_code': 400
+        'status_code': '400'
     }
     metrics_tests(counter_metric, latency_metric, mocked_metrics)
 
@@ -625,7 +625,7 @@ def test_api_1_account_service_add_valid_schema_invalid_account_put(swag_app_cli
         'method': 'put',
         'service': 'service',
         'endpoint': 'service.add_service_for_account',
-        'status_code': 404
+        'status_code': '404'
     })
 
 
@@ -655,7 +655,7 @@ def test_api_1_account_service_add_service_exists_put(swag_app_client, mocked_me
         'method': 'put',
         'service': 'service',
         'endpoint': 'service.add_service_for_account',
-        'status_code': 400
+        'status_code': '400'
     })
 
 
@@ -687,7 +687,7 @@ def test_api_1_account_service_updated_valid_schema_post(swag_app, swag_app_clie
         'method': 'post',
         'service': 'service',
         'endpoint': 'service.update_service_for_account',
-        'status_code': 204
+        'status_code': '204'
     }
     metrics_tests(counter_metric, latency_metric, mocked_metrics)
 
@@ -724,7 +724,7 @@ def test_api_1_account_service_updated_invalid_schema_post(swag_app, swag_app_cl
         'method': 'post',
         'service': 'service',
         'endpoint': 'service.update_service_for_account',
-        'status_code': 400
+        'status_code': '400'
     }
     metrics_tests(counter_metric, latency_metric, mocked_metrics)
 
@@ -755,7 +755,7 @@ def test_api_1_account_service_updated_valid_schema_invalid_account_post(swag_ap
         'method': 'post',
         'service': 'service',
         'endpoint': 'service.update_service_for_account',
-        'status_code': 404
+        'status_code': '404'
     })
 
 
@@ -786,7 +786,7 @@ def test_api_1_account_service_updated_service_not_found_post(swag_app_client, m
         'method': 'post',
         'service': 'service',
         'endpoint': 'service.update_service_for_account',
-        'status_code': 404
+        'status_code': '404'
     })
 
 
