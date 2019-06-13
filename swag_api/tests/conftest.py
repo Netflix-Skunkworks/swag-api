@@ -155,6 +155,11 @@ def metrics_tests(counter_metric: MagicMock, latency_metric: MagicMock, expected
     assert counter_metric.called
     assert latency_metric.called
 
+    # Verify that the tags are a Dict[str, str]
+    for x, y in expected_tags.items():
+        assert isinstance(x, str)
+        assert isinstance(y, str)
+
     assert counter_metric.call_args[0][0] == 'swag_api.request'
     assert counter_metric.call_args[1]['tags'] == expected_tags
 

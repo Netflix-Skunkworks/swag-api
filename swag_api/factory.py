@@ -208,7 +208,7 @@ def configure_metrics(app: Flask):
     def after_request_metrics(response):
         for metric, plugin in app.metrics_plugins.items():
             try:
-                g.metric_tags['status_code'] = response.status_code
+                g.metric_tags['status_code'] = str(response.status_code)
                 app.logger.debug(f'Sending metrics for the return code to the {metric} plugin...')
                 plugin.send_counter_metric('swag_api.request', tags=g.metric_tags)
 
