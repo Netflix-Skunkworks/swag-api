@@ -6,7 +6,7 @@
 .. author:: Will Bengtson <wbengtson@netflix.com>
 """
 # Add request parsers to document the API in SWAGGER and do nice auto required field parsing in REST API
-from flask_restplus import reqparse
+from flask_restx import reqparse
 
 namespace_arguments = reqparse.RequestParser()
 namespace_arguments.add_argument('namespace', type=str, help='Namespace for SWAG (ex. accounts)')

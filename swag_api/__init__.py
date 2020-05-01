@@ -17,11 +17,11 @@ import swag_api.resources.provider      # noqa: F401
 import swag_api.resources.services      # noqa: F401
 from swag_api.__about__ import (
     __author__, __copyright__, __email__, __license__, __summary__, __title__,
-    __uri__, __version__
+    __url__, __version__
 )
 
 __all__ = [
-    "__title__", "__summary__", "__uri__", "__version__", "__author__",
+    "__title__", "__summary__", "__url__", "__version__", "__author__",
     "__email__", "__license__", "__copyright__",
 ]
 
