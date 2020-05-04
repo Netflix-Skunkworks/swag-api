@@ -6,7 +6,7 @@
 .. moduleauthor:: Kevin Glisson <kglisson@netflix.com>
 """
 from flask import Blueprint
-from flask_restplus import Api
+from flask_restx import Api
 
 mod = Blueprint('api', __name__)
 api = Api(mod,

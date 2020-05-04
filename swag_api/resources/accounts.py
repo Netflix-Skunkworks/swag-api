@@ -9,7 +9,7 @@
 from typing import Callable
 
 from flask import g, request, Response
-from flask_restplus import Resource
+from flask_restx import Resource
 from marshmallow.exceptions import ValidationError
 from swag_api.api import api
 from swag_api.extensions import swag
