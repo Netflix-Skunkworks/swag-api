@@ -801,3 +801,28 @@ def test_metrics_plugin_loading(swag_app):
 
     assert swag_app.logger.info.called
     assert swag_app.logger.info.call_args_list[0][0][0] == 'Metrics collected for counter: testing, tags: {\'some\': \'value\'}'
+
+
+@pytest.mark.parametrize("method", ["get", "post", "put", "delete", "patch"])
+def test_default_404(swag_app_client, mocked_metrics, method):
+    kwargs = {}
+    if method != "get":
+        kwargs = {
+            "data": '{"some": "data"}',
+            "content_type": "application/json"
+        }
+
+    response = getattr(swag_app_client, method)('/not/a/real/path', **kwargs)
+
+    assert response.status_code == 404
+    assert response.get_json() == {
+        "message": "404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again."
+    }
+
+    # Verify the metric tags are passed in correctly -- verified in the mocked_metrics fixture
+    mocked_metrics.update({
+        'method': method,
+        'service': 'not_found',
+        'endpoint': 'not_found',
+        'status_code': '404'
+    })

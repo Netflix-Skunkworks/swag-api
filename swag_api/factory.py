@@ -16,9 +16,12 @@ import importlib
 import pkgutil
 from logging import Formatter, StreamHandler
 from logging.handlers import RotatingFileHandler
+from typing import Dict, Tuple
 
-from flask import Flask, g
+from flask import Flask, g, request
 from flask_cors import CORS
+from werkzeug.exceptions import NotFound
+from swag_api.api import api
 from swag_api.common.health import mod as health
 from swag_api.extensions import sentry, swag
 import swag_api.plugins.metrics
@@ -54,6 +57,7 @@ def create_app(app_name: str = None, blueprints: list = None, config: str = None
     configure_extensions(app)
     configure_logging(app)
     configure_metrics(app)
+    configure_error_handlers(app)
 
     if app.config.get('CORS_ENABLED'):
         cors_resources = app.config.get('CORS_RESOURCES')
@@ -169,7 +173,7 @@ def configure_metrics(app: Flask):
 
     :param app:
     """
-    app.logger.info(f'Configuring metrics plugins...')
+    app.logger.info('Configuring metrics plugins...')
     metrics_plugins = {}
     for finder, name, ispkg in pkgutil.iter_modules(swag_api.plugins.metrics.__path__,
                                                     swag_api.plugins.metrics.__name__ + "."):
@@ -198,8 +202,7 @@ def configure_metrics(app: Flask):
 
     @app.before_request
     def request_start_time():
-        """
-        Gets the start time of the request for calculating the total time it takes to process the given request
+        """Gets the start time of the request for calculating the total time it takes to process the given request
         for metrics collection.
         """
         g.start = time.time()
@@ -220,4 +223,23 @@ def configure_metrics(app: Flask):
 
         return response
 
-    app.logger.info(f'Completed configuration of metrics plugins.')
+    app.logger.info('Completed configuration of metrics plugins.')
+
+
+def configure_error_handlers(app: Flask):
+    """Configures error handlers for specific response codes.
+
+    :param app:
+    """
+    app.logger.info('Configuring exception handlers...')
+
+    @api.errorhandler(NotFound)
+    def handle_no_result_exception(error: Exception) -> Tuple[Dict[str, str], int]:
+        """Added to capture metrics on 404 errors. The metrics are collected on after_request_metrics."""
+        g.metric_tags = {
+            'method': request.method.lower(),
+            'service': 'not_found',
+            'endpoint': 'not_found'
+        }
+
+        return {"message": str(error)}, 404
