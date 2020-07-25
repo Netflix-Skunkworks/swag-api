@@ -11,6 +11,8 @@ import logging
 import pytest
 from mock import MagicMock
 from swag_api.tests.conftest import metrics_tests, reset_metrics
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -826,3 +828,21 @@ def test_default_404(swag_app_client, mocked_metrics, method):
         'endpoint': 'not_found',
         'status_code': '404'
     })
+
+
+def test_proxy_config(swag_proxy_app):
+    # Verify that the proxy stuff is loaded in the configuration:
+    proxy_values = {
+        'x_for': 1,
+        'x_proto': 1,
+        'x_host': 1,
+        'x_port': 0
+    }
+
+    assert swag_proxy_app.config.get("SWAG_PROXIES") == proxy_values
+    assert isinstance(swag_proxy_app.wsgi_app, ProxyFix)
+
+    # Add in the missing item and verify that everything is set properly:
+    proxy_values["x_prefix"] = 0
+    for key, value in proxy_values.items():
+        assert swag_proxy_app.wsgi_app.__getattribute__(key) == value

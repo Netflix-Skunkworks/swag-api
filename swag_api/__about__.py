@@ -10,7 +10,7 @@ __title__ = "swag-api"
 __summary__ = ("API service for SWAG data")
 __url__ = "https://github.com/Netflix-Skunkworks/swag-api"
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 __author__ = "The SWAG developers"
 __email__ = "security@netflix.com"

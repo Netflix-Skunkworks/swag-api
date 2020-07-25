@@ -16,17 +16,18 @@ import importlib
 import pkgutil
 from logging import Formatter, StreamHandler
 from logging.handlers import RotatingFileHandler
-from typing import Dict, Tuple
+from typing import Callable, Dict, Tuple, Union
 
-from flask import Flask, g, request
+from flask import Blueprint, Flask, g, request
 from flask_cors import CORS
-from werkzeug.exceptions import NotFound
 from swag_api.api import api
 from swag_api.common.health import mod as health
 from swag_api.extensions import sentry, swag
 import swag_api.plugins.metrics
 from swag_api.plugins.metrics import InvalidPluginClassException, InvalidPluginConfigurationException, MetricsPlugin
 from swag_client.util import parse_swag_config_options
+from werkzeug.exceptions import NotFound
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 DEFAULT_BLUEPRINTS = (
     health,
@@ -35,7 +36,7 @@ DEFAULT_BLUEPRINTS = (
 API_VERSION = 1
 
 
-def create_app(app_name: str = None, blueprints: list = None, config: str = None) -> Flask:
+def create_app(app_name: str = None, blueprints: Tuple[Blueprint] = None, config: str = None) -> Flask:
     """
     swag_api application factory
     :param config:
@@ -65,6 +66,8 @@ def create_app(app_name: str = None, blueprints: list = None, config: str = None
             CORS(app, resources=cors_resources)
         else:
             CORS(app)
+
+    app.wsgi_app = configure_proxies(app, app.wsgi_app)
     return app
 
 
@@ -129,7 +132,7 @@ def configure_extensions(app: Flask):
     swag.configure(**parse_swag_config_options(opts))
 
 
-def configure_blueprints(app: Flask, blueprints: list):
+def configure_blueprints(app: Flask, blueprints: Tuple[Blueprint]):
     """
     We prefix our APIs with their given version so that we can support
     multiple concurrent API versions.
@@ -163,6 +166,27 @@ def configure_logging(app: Flask):
         stream_handler = StreamHandler()
         stream_handler.setLevel(app.config.get('LOG_LEVEL', 'DEBUG'))
         app.logger.addHandler(stream_handler)
+
+
+def configure_proxies(app: Flask, wsgi_app: Callable) -> Union[Callable, ProxyFix]:
+    """Configures the app for Proxies if applicable.
+    :param app:
+    :param wsgi_app:
+    """
+    # The following items should be defined in the configuration:
+    # x_for – Number of values to trust for X-Forwarded-For.
+    # x_proto – Number of values to trust for X-Forwarded-Proto.
+    # x_host – Number of values to trust for X-Forwarded-Host.
+    # x_port – Number of values to trust for X-Forwarded-Port.
+    # x_prefix – Number of values to trust for X-Forwarded-Prefix.
+    proxy_config = app.config.get("SWAG_PROXIES", {})
+    if not proxy_config:
+        app.logger.info("No proxy configuration detected.")
+        return wsgi_app
+
+    # The ProxyFix will just simply get what is defined in there and nothing else.
+    app.logger.info(f"Proxy configuration detected - passing the ProxyFix args: {proxy_config}")
+    return ProxyFix(wsgi_app, **proxy_config)
 
 
 def configure_metrics(app: Flask):
@@ -206,6 +230,7 @@ def configure_metrics(app: Flask):
         for metrics collection.
         """
         g.start = time.time()
+        g.metric_tags = {}  # Add this in for the swagger endpoint or any other endpoint that forgot to include this for some reason.
 
     @app.after_request
     def after_request_metrics(response):

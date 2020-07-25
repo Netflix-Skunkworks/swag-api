@@ -46,3 +46,30 @@ To create a custom metrics plugin, you will need to do the following:
 
 1. You can have multiple metrics plugins enabled should you want! `swag-api` will look for them on startup and initialize them. Feel free to add any initialization code you need
 in your class's `__init__()`.
+
+
+## Special Configuration
+This section covers other configuration options that are of importance.
+
+### Reverse Proxy Configuration
+If you are using a reverse proxy, like Apache or NGINX to front swag-api, then you will need to set the `SWAG_PROXIES` configuration value in your configuration file.
+This is required to prevent a situation where Swagger attempts to load it's data via HTTP instead of HTTPS resulting in a mixed-content error.
+
+`SWAG_PROXIES` is a dictionary (`Dict[str, int]`) that takes in the values that werkzeug provides for the [ProxyFix](https://werkzeug.palletsprojects.com/en/1.0.x/middleware/proxy_fix/#x-forwarded-for-proxy-fix) middleware.
+Here is an example that is sufficient to make Swagger happy:
+
+```python
+SWAG_PROXIES = {
+    'x_for': 1,  # These values should 1 or 0
+    'x_host': 1,
+}
+
+# The full list of values as documented in https://werkzeug.palletsprojects.com/en/1.0.x/middleware/proxy_fix/#x-forwarded-for-proxy-fix are:
+# x_for – Number of values to trust for X-Forwarded-For.
+# x_proto – Number of values to trust for X-Forwarded-Proto.
+# x_host – Number of values to trust for X-Forwarded-Host.
+# x_port – Number of values to trust for X-Forwarded-Port.
+# x_prefix – Number of values to trust for X-Forwarded-Prefix.
+```
+
+If you are not using a reverse proxy, then you can ingore this section.
