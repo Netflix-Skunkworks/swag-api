@@ -114,6 +114,16 @@ def swag_app(dynamodb_table) -> Flask:
     yield app
 
 
+@pytest.yield_fixture(scope='function')
+def swag_proxy_app(dynamodb_table) -> Flask:
+    from swag_api import create_app
+
+    app = create_app(config=os.path.join(os.path.dirname(os.path.realpath(__file__)), 'default_proxy_test.conf.py'))
+    app.app_context()
+
+    yield app
+
+
 @pytest.fixture(scope='function')
 def swag_app_client(swag_app: Flask) -> FlaskClient:
     yield swag_app.test_client()

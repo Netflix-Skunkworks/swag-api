@@ -30,8 +30,8 @@ SWAG_API_BLUEPRINTS = (
 )
 
 
-def create_app(config=None) -> Flask:
-    app = factory.create_app(app_name=__name__, blueprints=SWAG_API_BLUEPRINTS, config=None)
+def create_app(app_name: str = __name__, config: str = None) -> Flask:
+    app = factory.create_app(app_name=app_name, blueprints=SWAG_API_BLUEPRINTS, config=config)
     return app
 
 
