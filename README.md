@@ -1,6 +1,6 @@
 # swag-api
 
-![Build Status](https://travis-ci.org/Netflix-Skunkworks/swag-api.svg?branch=master)
+[![Build Status](https://travis-ci.com/Netflix-Skunkworks/swag-api.svg?branch=master)](https://travis-ci.com/Netflix-Skunkworks/swag-api)
 
 [![codecov](https://codecov.io/gh/Netflix-Skunkworks/swag-api/branch/master/graph/badge.svg)](https://codecov.io/gh/Netflix-Skunkworks/swag-api)
 
